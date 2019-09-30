@@ -62,11 +62,11 @@ public class Persentase extends javax.swing.JFrame {
         jProgressBar1.setValue(jumsuara1.intValue());
         jProgressBar1.setMaximum(totalsuara.intValue());
         String persenan1 = Double.toString(persen1);
-        /*if("NaN".equals(persenan1)){
+        if("NaN".equals(persenan1)){
             persen1 = 0.0;
         }else{
             
-        }*/
+        }
         jProgressBar1.setString(String.format("%,.2f", persen1) + " %");
         System.out.println("Persen Paslon 1 : " + persen1);        
     }

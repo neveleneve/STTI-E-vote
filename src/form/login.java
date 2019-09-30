@@ -15,10 +15,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
-import javax.swing.border.MatteBorder;
+//import javax.swing.border.MatteBorder;
 import javax.swing.plaf.ColorUIResource;
 
 public class login extends JFrame{
@@ -40,26 +42,27 @@ public class login extends JFrame{
         jLabel5.setText(" "); 
         jLabel6.setText(" "); 
     }    
-    int xa =480;
-    int ya=80;
+    
+    public java.sql.Connection conn = new dbconnection().connect();
+    int xa =620;
+    int ya = 80;
     @Override
     public void paint(Graphics g){
-    super.paint(g);
-    Graphics2D gd =(Graphics2D)g;
-    gd.setFont(new Font("Tahoma", Font.BOLD, 14));
-    gd.setColor(new Color(247,202,24));
-    gd.drawString("Komisi Pemilihan Umum Mahasiswa Sekolah Tinggi Teknologi Indonesia Tanjungpinang", xa, ya);
-        try {
-            Thread.sleep(25);
-            xa-=2;
-        } catch (Exception e) {
-        
-        }
-        if(xa<-598){
-            xa=480;
-            
-        }
-        repaint();
+        super.paint(g);
+        Graphics2D gd =(Graphics2D)g;
+        gd.setFont(new Font("Tahoma", Font.BOLD, 14));
+        gd.setColor(new Color(247,202,24));
+        gd.drawString("Komisi Pemilihan Umum Mahasiswa Sekolah Tinggi Teknologi Indonesia Tanjungpinang", xa, ya);
+            try {
+                Thread.sleep(25);
+                xa-=2;
+            } catch (InterruptedException e) {
+
+            }
+            if(xa<-598){
+                xa=620;
+            }
+            repaint();
 }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -70,7 +73,6 @@ public class login extends JFrame{
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton4 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -84,6 +86,7 @@ public class login extends JFrame{
         jButton1 = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
+        jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Pemilihan Raya STT Indonesia");
@@ -91,36 +94,24 @@ public class login extends JFrame{
         setUndecorated(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jButton4.setBackground(new java.awt.Color(123, 239, 178));
-        jButton4.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jButton4.setText("Connection Test");
-        jButton4.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(123, 239, 178)));
-        jButton4.setBorderPainted(false);
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 10, 110, 30));
-
         jPanel1.setBackground(new java.awt.Color(44, 62, 80));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(247, 202, 24));
         jLabel2.setText("Username");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 260, -1, -1));
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 80, -1, -1));
 
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("ini peringatan untuk input non angka");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 300, 200, 20));
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 120, 200, 20));
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 40, 180, 180));
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 80, 180, 180));
 
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("ini untuk memberi tahu pass salah dan sudah memilih");
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 370, 200, 20));
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 190, 200, 20));
 
         jPasswordField1.setBackground(new java.awt.Color(44, 62, 80));
         jPasswordField1.setFont(new java.awt.Font("Tahoma", 3, 11)); // NOI18N
@@ -144,7 +135,7 @@ public class login extends JFrame{
                 jPasswordField1KeyTyped(evt);
             }
         });
-        jPanel1.add(jPasswordField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 350, 154, 20));
+        jPanel1.add(jPasswordField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 170, 154, 20));
 
         jButton3.setBackground(new java.awt.Color(247, 202, 24));
         jButton3.setText("Admin Login");
@@ -155,17 +146,12 @@ public class login extends JFrame{
                 jButton3MouseClicked(evt);
             }
         });
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 400, 100, 30));
+        jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 220, 100, 30));
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(247, 202, 24));
         jLabel3.setText("Password");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 330, -1, -1));
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 150, -1, -1));
 
         jButton2.setBackground(new java.awt.Color(0, 181, 204));
         jButton2.setText("Login");
@@ -176,7 +162,7 @@ public class login extends JFrame{
                 jButton2ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 400, 90, 30));
+        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 220, 90, 30));
 
         jTextField1.setBackground(new java.awt.Color(44, 62, 80));
         jTextField1.setFont(new java.awt.Font("Tahoma", 3, 11)); // NOI18N
@@ -197,37 +183,40 @@ public class login extends JFrame{
                 jTextField1KeyTyped(evt);
             }
         });
-        jPanel1.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 280, 200, 20));
+        jPanel1.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 100, 200, 20));
 
         jButton1.setBackground(new java.awt.Color(150, 40, 27));
         jButton1.setBorder(javax.swing.BorderFactory.createMatteBorder(10, 10, 10, 10, new java.awt.Color(150, 40, 27)));
         jButton1.setBorderPainted(false);
+        jButton1.setFocusable(false);
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 350, 40, 20));
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 170, 40, 20));
 
         jLabel6.setText("jLabel6");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 430, 200, 30));
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 250, 200, 30));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 50, 480, 460));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 40, 620, 310));
 
         jPanel2.setBackground(new java.awt.Color(247, 202, 24));
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 480, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 50, Short.MAX_VALUE)
-        );
+        jButton4.setBackground(new java.awt.Color(123, 239, 178));
+        jButton4.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jButton4.setText("Connection Test");
+        jButton4.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(123, 239, 178)));
+        jButton4.setBorderPainted(false);
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+        jPanel2.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 10, 110, 20));
 
-        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 480, 50));
+        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 620, 40));
 
         pack();
         setLocationRelativeTo(null);
@@ -258,7 +247,6 @@ public class login extends JFrame{
     }   
     
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        java.sql.Connection conn = new dbconnection().connect();        
         char[] a = {'P','a','s','s','w','o','r','d','.','.','.'};
         if("NIM...".equals(jTextField1.getText())|| Arrays.equals(a, jPasswordField1.getPassword())){
             String t = "<html><font color=#f7ca18>Silahkan Lengkapi Data Login Anda</font>";
@@ -298,7 +286,17 @@ public class login extends JFrame{
                             }else{
                                 jLabel4.setText(" ");
                                 jLabel5.setText(" ");
+                                String t = "<html><font color=#f7ca18>Anda Telah Login! Silahkan Memilih!</font>";
+                                UIManager ui = new UIManager();
+                                ui.put("OptionPane.background", new ColorUIResource(44,62,80));
+                                ui.put("Panel.background", new ColorUIResource(44,62,80));
+                                JOptionPane.showMessageDialog(null, t, "Informasi", JOptionPane.INFORMATION_MESSAGE);
                                 this.dispose();
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException ex) {
+                                    Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
+                                }
                                 new voter(nama, nim).setVisible(true);
                             }
                         }
@@ -319,10 +317,6 @@ public class login extends JFrame{
             }
         }           
     }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        
-    }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         if (jPasswordField1.getEchoChar() == (char)0){
@@ -428,9 +422,9 @@ public class login extends JFrame{
             ui.put("Panel.background", new ColorUIResource(44,62,80));
             JOptionPane.showMessageDialog(null, t, "Informasi", JOptionPane.INFORMATION_MESSAGE);
             this.dispose();
+            // Last Edited 27/03/2019 
+            //adminlogin.jButton1.setText("Login");
             new adminlogin().setVisible(true);
-        }else if(evt.getClickCount() < 3){
-            
         }
     }//GEN-LAST:event_jButton3MouseClicked
 

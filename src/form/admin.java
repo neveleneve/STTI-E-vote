@@ -9,14 +9,18 @@ import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import java.sql.Connection;
 import conf.dbconnection;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
+import javax.swing.JFileChooser;
 import javax.swing.JProgressBar;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JFrame;
+import javax.swing.UIManager;
 import javax.swing.WindowConstants;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -30,12 +34,17 @@ public class admin extends JFrame {
     private DefaultTableModel tbllogin_mdl;
     public admin(String para) {
         initComponents();
+        tabColor();
         TampilData();
         setExtendedState(JFrame.MAXIMIZED_HORIZ);
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setResizable(false);
     }
-    
+    public void tabColor(){
+        //jTabbedPane1.setBackgroundAt(0, new Color(44,62,80));
+        //jTabbedPane1.setBackgroundAt(1, Color.GREEN);
+        UIManager.put("TabbedPane.background", Color.PINK);
+    }
          
     public void TampilData(){
         tbllogin_mdl = new DefaultTableModel();
@@ -51,7 +60,7 @@ public class admin extends JFrame {
         java.sql.Connection conn = new dbconnection().connect();
         try{
             java.sql.Statement stmt = conn.createStatement();
-            java.sql.ResultSet res = stmt.executeQuery("select * from login");
+            java.sql.ResultSet res = stmt.executeQuery("select * from login where nama <> 'admin'");
             while(res.next()){
                 tbllogin_mdl.addRow(new Object[]{
                     res.getString("nim"),
@@ -60,12 +69,21 @@ public class admin extends JFrame {
                     res.getString("confirm")
                 });
         }
-        }catch(Exception e){
+        }catch(SQLException e){
             JOptionPane.showMessageDialog(null, e);
         }
     }
     
-    
+    public void DeleteAllData(){
+        java.sql.Connection conn = new dbconnection().connect();        
+        try {
+            java.sql.PreparedStatement stm = conn.prepareStatement("truncate login");
+            stm.executeUpdate();
+            conn.close();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
            
     
     
@@ -78,18 +96,67 @@ public class admin extends JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jPanel1 = new javax.swing.JPanel();
+        jTextField1 = new javax.swing.JTextField();
+        insertButton = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
-        jTextField1 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Halaman Administrator");
+        setUndecorated(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jTabbedPane1.setBackground(new java.awt.Color(44, 62, 80));
+        jTabbedPane1.setForeground(new java.awt.Color(255, 255, 255));
+
+        jPanel1.setBackground(new java.awt.Color(44, 62, 80));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel1.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 180, 30));
+
+        insertButton.setBackground(new java.awt.Color(123, 239, 178));
+        insertButton.setText("Insert Data");
+        insertButton.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(0, 0, 0)));
+        insertButton.setBorderPainted(false);
+        insertButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                insertButtonActionPerformed(evt);
+            }
+        });
+        jPanel1.add(insertButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 10, 125, 30));
+
+        jButton6.setBackground(new java.awt.Color(150, 40, 27));
+        jButton6.setForeground(new java.awt.Color(255, 255, 255));
+        jButton6.setText("Delete All Data");
+        jButton6.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(0, 0, 0)));
+        jButton6.setBorderPainted(false);
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 10, 125, 30));
+
+        jButton1.setBackground(new java.awt.Color(123, 239, 178));
+        jButton1.setText("Cari Nim");
+        jButton1.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(0, 0, 0)));
+        jButton1.setBorderPainted(false);
+        jButton1.setPreferredSize(new java.awt.Dimension(71, 20));
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 10, 80, 30));
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -104,20 +171,7 @@ public class admin extends JFrame {
         ));
         jScrollPane2.setViewportView(jTable2);
 
-        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 74, 610, 306));
-        getContentPane().add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 213, 30));
-
-        jButton1.setBackground(new java.awt.Color(123, 239, 178));
-        jButton1.setText("Cari Nim");
-        jButton1.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(0, 0, 0)));
-        jButton1.setBorderPainted(false);
-        jButton1.setPreferredSize(new java.awt.Dimension(71, 20));
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 20, 80, 30));
+        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, 555, 306));
 
         jButton2.setBackground(new java.awt.Color(0, 181, 204));
         jButton2.setText("Lihat Persentase");
@@ -128,7 +182,7 @@ public class admin extends JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 400, 130, 30));
+        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 380, 135, 30));
 
         jButton3.setBackground(new java.awt.Color(150, 40, 27));
         jButton3.setForeground(new java.awt.Color(255, 255, 255));
@@ -140,7 +194,7 @@ public class admin extends JFrame {
                 jButton3ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 400, 110, 30));
+        jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 380, 135, 30));
 
         jButton4.setBackground(new java.awt.Color(123, 239, 178));
         jButton4.setText("Refresh Persentase");
@@ -151,7 +205,7 @@ public class admin extends JFrame {
                 jButton4ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 400, 170, 30));
+        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 380, 135, 30));
 
         jButton5.setBackground(new java.awt.Color(123, 239, 178));
         jButton5.setText("Refresh Tabel");
@@ -162,7 +216,15 @@ public class admin extends JFrame {
                 jButton5ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 400, 170, 30));
+        jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 380, 135, 30));
+
+        jTabbedPane1.addTab("Data Pemilih", jPanel1);
+        jTabbedPane1.addTab("Data Calon ", jPanel3);
+
+        getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 40, 580, 460));
+
+        jPanel2.setBackground(new java.awt.Color(247, 202, 24));
+        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 580, 60));
 
         pack();
         setLocationRelativeTo(null);
@@ -182,7 +244,7 @@ public class admin extends JFrame {
         java.sql.Connection conn = new dbconnection().connect();
         try{
             java.sql.Statement stmt = conn.createStatement();
-            java.sql.ResultSet res = stmt.executeQuery("select * from login where nim = " + jTextField1.getText() + "");
+            java.sql.ResultSet res = stmt.executeQuery("select * from login where nim like  '" + jTextField1.getText() + "%'");
             while(res.next()){
                 tbllogin_mdl.addRow(new Object[]{
                     res.getString("nim"),
@@ -191,8 +253,8 @@ public class admin extends JFrame {
                     res.getString("confirm")
                 });
         }
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(null, "", "A", JOptionPane.INFORMATION_MESSAGE);
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, e, "A", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -226,6 +288,17 @@ public class admin extends JFrame {
         Persentase.progressbar2();
     }//GEN-LAST:event_jButton4ActionPerformed
 
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        this.dispose();
+        new adminlogin().setVisible(true);
+        adminlogin.jButton1.setText("Konfirmasi");
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void insertButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertButtonActionPerformed
+        new loadData().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_insertButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -237,7 +310,7 @@ public class admin extends JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Windows".equals(info.getName())) {
+                if ("Windows Classic".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -262,12 +335,18 @@ public class admin extends JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton insertButton;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable2;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables

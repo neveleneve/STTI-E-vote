@@ -2,6 +2,9 @@ package form;
 import conf.dbconnection;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
@@ -18,7 +21,7 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.plaf.ColorUIResource;
-public class voter extends JFrame implements Runnable{
+public class voter extends JFrame{
     Thread T;
     boolean kanan = true;
     boolean kiri = false;
@@ -37,29 +40,44 @@ public class voter extends JFrame implements Runnable{
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setResizable(false);
         namaPaslon1();
-        namaPaslon2();
-        jLabel1.setText("Silahkan Memilih Sesuai Hati Nurani Anda");
-        jLabel1.setForeground(new Color(50,50,200));
-        x = jLabel1.getX();
-        y = jLabel1.getY();
-        T = new Thread(this);
-        T.start();        
-    }    
+        namaPaslon2();          
+    }
+    int xa = 1000;
+    int ya = 30;
+    @Override
+    public void paint(Graphics g){
+        super.paint(g);
+        Graphics2D gd =(Graphics2D)g;
+        gd.setFont(new Font("Tahoma", Font.BOLD, 14));
+        gd.setColor(new Color(0,0,0));
+        gd.drawString("Selamat Datang, " + namapemilih, xa, ya);
+        try {
+            Thread.sleep(25);
+            xa-=2;
+        } catch (Exception e) {
+        
+        }
+        if(xa<-257){
+            xa = 1000;
+            //gd.setColor(Color.red);
+        }
+        repaint();
+    }
     public void namaPaslon1(){               
         java.sql.Connection conn = new dbconnection().connect();        
         try {
             java.sql.PreparedStatement stm = conn.prepareStatement("select nama,gambar from hasilvote where Id = 1");
-                ResultSet rs = stm.executeQuery();
-                if(rs.next()){
-                    String nama = rs.getString("nama");
-                    byte[] img = rs.getBytes("gambar");
-                    ImageIcon myimg = new ImageIcon(img);
-                    Image img1 = myimg.getImage();
-                    Image img2 = img1.getScaledInstance(jLabel2.getWidth(), jLabel2.getHeight(), Image.SCALE_SMOOTH);
-                    ImageIcon i = new ImageIcon(img2);
-                    jLabel2.setIcon(i);
-                    jRadioButton1.setText(nama);
-                }
+            ResultSet rs = stm.executeQuery();
+            if(rs.next()){
+                String nama = rs.getString("nama");
+                byte[] img = rs.getBytes("gambar");
+                ImageIcon myimg = new ImageIcon(img);
+                Image img1 = myimg.getImage();
+                Image img2 = img1.getScaledInstance(jLabel2.getWidth(), jLabel2.getHeight(), Image.SCALE_SMOOTH);
+                ImageIcon i = new ImageIcon(img2);
+                jLabel2.setIcon(i);
+                jRadioButton1.setText(nama);
+            }
         } catch (SQLException e) {
         
         }        
@@ -129,7 +147,6 @@ public class voter extends JFrame implements Runnable{
         jLabel4 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Pemilihan Raya STT Indonesia");
@@ -213,14 +230,6 @@ public class voter extends JFrame implements Runnable{
 
         jPanel2.setBackground(new java.awt.Color(247, 202, 24));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel1.setText("Selamat Datang, Mohammad Farid Hasymi");
-        jLabel1.setAlignmentY(0.0F);
-        jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 960, 20));
-        jLabel1.getAccessibleContext().setAccessibleName("jLabel1");
-
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1000, 40));
 
         pack();
@@ -331,7 +340,6 @@ public class voter extends JFrame implements Runnable{
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -341,57 +349,4 @@ public class voter extends JFrame implements Runnable{
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;
     // End of variables declaration//GEN-END:variables
-    @Override
-    public void run() {
-        while(true){
-            if(berjalan){
-                if(x >= jLabel1.getWidth() - jLabel1.getPreferredSize().getWidth() + 20){  // Sesuaikan dengan ukuran text kalian
-                    kiri = true;
-                    kanan = false;
-                    if(jLabel1.getForeground().equals(Color.red)){
-                        jLabel1.setForeground(Color.black);
-                    }else if(jLabel1.getForeground().equals(Color.black)){
-                        jLabel1.setForeground(new Color(50,50,200));
-                    }else if(jLabel1.getForeground().equals(new Color(50,50,200))){
-                        jLabel1.setForeground(Color.red);
-                    }
-                    if(("Selamat Datang, "+ namapemilih).equals(jLabel1.getText())){
-                        jLabel1.setText("Silahkan Memilih Sesuai Hati Nurani Anda");
-                    }else if(("Silahkan Memilih Sesuai Hati Nurani Anda").equals(jLabel1.getText())){
-                        jLabel1.setText("Selamat Datang, "+ namapemilih);
-                    }
-                } 
-                if(kiri){
-                    x -- ;
-                    jLabel1.setLocation(x,y);
-                }
-                if(x < 20 ){  // Sesuaikan dengan ukuran text kalian
-                    kiri = false;
-                    kanan = true;
-                    if(jLabel1.getForeground().equals(Color.red)){
-                        jLabel1.setForeground(Color.black);
-                    }else if(jLabel1.getForeground().equals(Color.black)){
-                        jLabel1.setForeground(new Color(50,50,200));
-                    }else if(jLabel1.getForeground().equals(new Color(50,50,200))){
-                        jLabel1.setForeground(Color.red);
-                    }
-                    if(("Selamat Datang, "+ namapemilih).equals(jLabel1.getText())){
-                        jLabel1.setText("Silahkan Memilih Sesuai Hati Nurani Anda");
-                    }else if(("Silahkan Memilih Sesuai Hati Nurani Anda").equals(jLabel1.getText())){
-                        jLabel1.setText("Selamat Datang, "+ namapemilih);
-                    }
-                } 
-                if(kanan){
-                    x ++ ;
-                    jLabel1.setLocation(x,y);
-                }                
-            }
-            try {
-                Thread.sleep(10);
-            }catch (InterruptedException ex){
-                Logger.getLogger(voter.class.getName()).log(Level.SEVERE,null, ex);
-            }
-            repaint();
-        }        
-    }
 }
