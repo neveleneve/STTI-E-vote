@@ -13,6 +13,7 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -43,7 +44,7 @@ public class login extends JFrame{
         jLabel6.setText(" "); 
     }    
     
-    public java.sql.Connection conn = new dbconnection().connect();
+    public Connection conn = new dbconnection().connect();
     int xa =620;
     int ya = 80;
     @Override
@@ -256,18 +257,18 @@ public class login extends JFrame{
             JOptionPane.showMessageDialog(null, t, "Informasi", JOptionPane.INFORMATION_MESSAGE);
         }else{
             try {
-                java.sql.PreparedStatement nimstate = conn.prepareStatement("select * from login where nim = ?");
+                PreparedStatement nimstate = conn.prepareStatement("select * from login where nim = ?");
                 nimstate.setString(1, jTextField1.getText());
                 ResultSet nimrs = nimstate.executeQuery();
                 if(nimrs.next()){
                     String nama = nimrs.getString("nama");
                     String nim = nimrs.getString("nim");
-                    java.sql.PreparedStatement passtate = conn.prepareStatement("select * from login where nim = ? and password = ?");
+                    PreparedStatement passtate = conn.prepareStatement("select * from login where nim = ? and password = ?");
                     passtate.setString(1, jTextField1.getText());
                     passtate.setString(2, String.valueOf(jPasswordField1.getPassword()));
                     ResultSet pasrs = passtate.executeQuery();
                     if(pasrs.next()){
-                        java.sql.PreparedStatement conftate = conn.prepareStatement("select * from login where nim = ? and password = ?");
+                        PreparedStatement conftate = conn.prepareStatement("select * from login where nim = ? and password = ?");
                         conftate.setString(1, jTextField1.getText());
                         conftate.setString(2, String.valueOf(jPasswordField1.getPassword()));
                         ResultSet confrs = conftate.executeQuery();
@@ -338,15 +339,21 @@ public class login extends JFrame{
             UIManager ui = new UIManager();
             ui.put("OptionPane.background", new ColorUIResource(44,62,80));
             ui.put("Panel.background", new ColorUIResource(44,62,80));
+            Thread.sleep(1000);
             JOptionPane.showMessageDialog(null, t, "Informasi", JOptionPane.INFORMATION_MESSAGE);            
             jTextField1.requestFocus();
-        }catch(SQLException e){
-            String t = "<html><font color=#f7ca18>Anda Tidak Terhubung</font>";
-            UIManager ui = new UIManager();
-            ui.put("OptionPane.background", new ColorUIResource(44,62,80));
-            ui.put("Panel.background", new ColorUIResource(44,62,80));
-            JOptionPane.showMessageDialog(null, t, "Informasi", JOptionPane.INFORMATION_MESSAGE);
-            System.out.println(e);
+        }catch(InterruptedException | SQLException e){
+            try {
+                String t = "<html><font color=#f7ca18>Anda Tidak Terhubung</font>";
+                UIManager ui = new UIManager();
+                ui.put("OptionPane.background", new ColorUIResource(44,62,80));
+                ui.put("Panel.background", new ColorUIResource(44,62,80));
+                Thread.sleep(1000);
+                JOptionPane.showMessageDialog(null, t, "Informasi", JOptionPane.INFORMATION_MESSAGE);
+                System.out.println(e);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_jButton4ActionPerformed
 
@@ -439,7 +446,7 @@ public class login extends JFrame{
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Windows".equals(info.getName())) {
+                if ("Windows Classic".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }

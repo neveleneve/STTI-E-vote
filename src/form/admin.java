@@ -10,23 +10,19 @@ import javax.swing.JOptionPane;
 import java.sql.Connection;
 import conf.dbconnection;
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.text.DecimalFormat;
-import javax.swing.JFileChooser;
-import javax.swing.JProgressBar;
-import javax.swing.Timer;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
  * @author NEVE
  */
-public class admin extends JFrame {
+public final class admin extends JFrame {
 
     /**
      * Creates new form admin
@@ -57,10 +53,10 @@ public class admin extends JFrame {
         jTable2.getColumnModel().getColumn(1).setPreferredWidth(120);
         jTable2.getColumnModel().getColumn(2).setPreferredWidth(80);
         jTable2.getColumnModel().getColumn(3).setPreferredWidth(20);
-        java.sql.Connection conn = new dbconnection().connect();
+        Connection conn = new dbconnection().connect();
         try{
-            java.sql.Statement stmt = conn.createStatement();
-            java.sql.ResultSet res = stmt.executeQuery("select * from login where nama <> 'admin'");
+            Statement stmt = conn.createStatement();
+            ResultSet res = stmt.executeQuery("select * from login where nama <> 'admin'");
             while(res.next()){
                 tbllogin_mdl.addRow(new Object[]{
                     res.getString("nim"),
@@ -75,9 +71,9 @@ public class admin extends JFrame {
     }
     
     public void DeleteAllData(){
-        java.sql.Connection conn = new dbconnection().connect();        
+        Connection conn = new dbconnection().connect();        
         try {
-            java.sql.PreparedStatement stm = conn.prepareStatement("truncate login");
+            PreparedStatement stm = conn.prepareStatement("truncate login");
             stm.executeUpdate();
             conn.close();
         } catch (SQLException e) {
@@ -118,9 +114,14 @@ public class admin extends JFrame {
 
         jTabbedPane1.setBackground(new java.awt.Color(44, 62, 80));
         jTabbedPane1.setForeground(new java.awt.Color(255, 255, 255));
+        jTabbedPane1.setFocusable(false);
+        jTabbedPane1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jTabbedPane1.setOpaque(true);
 
         jPanel1.setBackground(new java.awt.Color(44, 62, 80));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jTextField1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jPanel1.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 180, 30));
 
         insertButton.setBackground(new java.awt.Color(123, 239, 178));
@@ -219,6 +220,8 @@ public class admin extends JFrame {
         jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 380, 135, 30));
 
         jTabbedPane1.addTab("Data Pemilih", jPanel1);
+
+        jPanel3.setBackground(new java.awt.Color(44, 62, 80));
         jTabbedPane1.addTab("Data Calon ", jPanel3);
 
         getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 40, 580, 460));
@@ -241,10 +244,10 @@ public class admin extends JFrame {
         jTable2.getColumnModel().getColumn(1).setPreferredWidth(120);
         jTable2.getColumnModel().getColumn(2).setPreferredWidth(80);
         jTable2.getColumnModel().getColumn(3).setPreferredWidth(20);
-        java.sql.Connection conn = new dbconnection().connect();
+        Connection conn = new dbconnection().connect();
         try{
-            java.sql.Statement stmt = conn.createStatement();
-            java.sql.ResultSet res = stmt.executeQuery("select * from login where nim like  '" + jTextField1.getText() + "%'");
+            Statement stmt = conn.createStatement();
+            ResultSet res = stmt.executeQuery("select * from login where nim like  '" + jTextField1.getText() + "%'");
             while(res.next()){
                 tbllogin_mdl.addRow(new Object[]{
                     res.getString("nim"),
