@@ -52,7 +52,7 @@ public final class admin extends JFrame {
         tbllogin_mdl.addColumn("NIM");
         tbllogin_mdl.addColumn("Nama");
         tbllogin_mdl.addColumn("Password");
-        tbllogin_mdl.addColumn("");
+        tbllogin_mdl.addColumn("Status");
         jTable2.setModel(tbllogin_mdl);
         jTable2.getColumnModel().getColumn(0).setPreferredWidth(70);
         jTable2.getColumnModel().getColumn(1).setPreferredWidth(120);
@@ -120,6 +120,7 @@ public final class admin extends JFrame {
         jButton7 = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Halaman Administrator");
@@ -127,7 +128,7 @@ public final class admin extends JFrame {
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jTabbedPane1.setBackground(new java.awt.Color(44, 62, 80));
-        jTabbedPane1.setForeground(new java.awt.Color(255, 255, 255));
+        jTabbedPane1.setForeground(new java.awt.Color(247, 202, 24));
         jTabbedPane1.setFocusable(false);
         jTabbedPane1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jTabbedPane1.setOpaque(true);
@@ -139,6 +140,7 @@ public final class admin extends JFrame {
         jPanel1.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 180, 30));
 
         insertButton.setBackground(new java.awt.Color(123, 239, 178));
+        insertButton.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         insertButton.setText("Insert Data");
         insertButton.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(0, 0, 0)));
         insertButton.setBorderPainted(false);
@@ -147,9 +149,10 @@ public final class admin extends JFrame {
                 insertButtonActionPerformed(evt);
             }
         });
-        jPanel1.add(insertButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 10, 125, 30));
+        jPanel1.add(insertButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 10, 125, 30));
 
         jButton6.setBackground(new java.awt.Color(150, 40, 27));
+        jButton6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jButton6.setForeground(new java.awt.Color(255, 255, 255));
         jButton6.setText("Delete All Data");
         jButton6.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(0, 0, 0)));
@@ -159,9 +162,10 @@ public final class admin extends JFrame {
                 jButton6ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 10, 125, 30));
+        jPanel1.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 10, 125, 30));
 
         jButton1.setBackground(new java.awt.Color(123, 239, 178));
+        jButton1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jButton1.setText("Cari Nim");
         jButton1.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(0, 0, 0)));
         jButton1.setBorderPainted(false);
@@ -173,6 +177,7 @@ public final class admin extends JFrame {
         });
         jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 10, 80, 30));
 
+        jTable2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -186,9 +191,10 @@ public final class admin extends JFrame {
         ));
         jScrollPane2.setViewportView(jTable2);
 
-        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, 555, 306));
+        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, 675, 420));
 
         jButton2.setBackground(new java.awt.Color(0, 181, 204));
+        jButton2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jButton2.setText("Lihat Persentase");
         jButton2.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(0, 0, 0)));
         jButton2.setBorderPainted(false);
@@ -197,9 +203,10 @@ public final class admin extends JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 380, 135, 30));
+        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 490, 165, 30));
 
         jButton3.setBackground(new java.awt.Color(150, 40, 27));
+        jButton3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jButton3.setForeground(new java.awt.Color(255, 255, 255));
         jButton3.setText("Log Out");
         jButton3.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(0, 0, 0)));
@@ -209,9 +216,10 @@ public final class admin extends JFrame {
                 jButton3ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 380, 135, 30));
+        jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 490, 165, 30));
 
         jButton4.setBackground(new java.awt.Color(123, 239, 178));
+        jButton4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jButton4.setText("Refresh Persentase");
         jButton4.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(0, 0, 0)));
         jButton4.setBorderPainted(false);
@@ -220,9 +228,10 @@ public final class admin extends JFrame {
                 jButton4ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 380, 135, 30));
+        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 490, 165, 30));
 
         jButton5.setBackground(new java.awt.Color(123, 239, 178));
+        jButton5.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jButton5.setText("Refresh Tabel");
         jButton5.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(0, 0, 0)));
         jButton5.setBorderPainted(false);
@@ -231,9 +240,9 @@ public final class admin extends JFrame {
                 jButton5ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 380, 135, 30));
+        jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 490, 165, 30));
 
-        jTabbedPane1.addTab("Data Pemilih", jPanel1);
+        jTabbedPane1.addTab(" Data Pemilih ", jPanel1);
 
         jPanel3.setBackground(new java.awt.Color(44, 62, 80));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -241,64 +250,71 @@ public final class admin extends JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Nama Calon Wakil Ketua");
-        jPanel3.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 20, 180, 20));
+        jPanel3.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 20, 180, 20));
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Nama Calon Ketua");
-        jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, 140, 20));
+        jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 20, 140, 20));
 
         txtNamaWaka.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        jPanel3.add(txtNamaWaka, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 50, 180, 30));
+        jPanel3.add(txtNamaWaka, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 50, 180, 30));
 
         txtNamaKa.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        jPanel3.add(txtNamaKa, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 50, 180, 30));
+        jPanel3.add(txtNamaKa, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 50, 180, 30));
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Gambar Calon");
-        jPanel3.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 100, 140, 20));
+        jPanel3.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 100, 140, 20));
 
         txtGbCalon.setEditable(false);
         txtGbCalon.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         txtGbCalon.setDisabledTextColor(new java.awt.Color(255, 255, 255));
-        jPanel3.add(txtGbCalon, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 130, 180, 30));
+        jPanel3.add(txtGbCalon, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 130, 180, 30));
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Nomor Calon");
-        jPanel3.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, 140, 20));
+        jPanel3.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 100, 140, 20));
 
         txtNoCalon.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        jPanel3.add(txtNoCalon, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, 180, 30));
+        jPanel3.add(txtNoCalon, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 130, 180, 30));
 
         lbFotoPasangan.setForeground(new java.awt.Color(255, 255, 255));
         lbFotoPasangan.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbFotoPasangan.setText("FOTO PASANGAN CALON");
         lbFotoPasangan.setBorder(javax.swing.BorderFactory.createMatteBorder(3, 3, 3, 3, new java.awt.Color(255, 255, 255)));
-        jPanel3.add(lbFotoPasangan, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 180, 135, 155));
+        jPanel3.add(lbFotoPasangan, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 180, 135, 155));
 
         jButton7.setBackground(new java.awt.Color(123, 239, 178));
         jButton7.setText("Browse");
-        jButton7.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(123, 239, 178), 15));
+        jButton7.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(123, 239, 178)));
         jButton7.setBorderPainted(false);
         jButton7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton7ActionPerformed(evt);
             }
         });
-        jPanel3.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(403, 170, 80, 30));
+        jPanel3.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 130, 80, 30));
 
-        jTabbedPane1.addTab("Input Data Calon ", jPanel3);
+        jTabbedPane1.addTab(" Input Data Calon ", jPanel3);
 
         jPanel4.setBackground(new java.awt.Color(44, 62, 80));
         jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        jTabbedPane1.addTab("Pengaturan Data Calon", jPanel4);
+        jTabbedPane1.addTab(" Pengaturan Data Calon ", jPanel4);
 
-        getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 40, 580, 460));
+        getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 40, 700, 560));
 
         jPanel2.setBackground(new java.awt.Color(247, 202, 24));
-        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 580, 60));
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(44, 62, 80));
+        jLabel5.setText("ADMIN DASHBOARD");
+        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 0, 220, 40));
+
+        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 700, 60));
 
         pack();
         setLocationRelativeTo(null);
@@ -309,7 +325,7 @@ public final class admin extends JFrame {
         tbllogin_mdl.addColumn("NIM");
         tbllogin_mdl.addColumn("Nama");
         tbllogin_mdl.addColumn("Password");
-        tbllogin_mdl.addColumn("");
+        tbllogin_mdl.addColumn("Status");
         jTable2.setModel(tbllogin_mdl);
         jTable2.getColumnModel().getColumn(0).setPreferredWidth(70);
         jTable2.getColumnModel().getColumn(1).setPreferredWidth(120);
@@ -334,6 +350,7 @@ public final class admin extends JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+//        this.dispose();
         new Persentase().setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -443,6 +460,7 @@ public final class admin extends JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
