@@ -10,13 +10,18 @@ import javax.swing.JOptionPane;
 import java.sql.Connection;
 import conf.dbconnection;
 import java.awt.Color;
+import java.awt.Image;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
+import javax.swing.border.MatteBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -79,10 +84,8 @@ public final class admin extends JFrame {
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e);
         }
-    }
-           
-    
-    
+    }          
+        
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -105,6 +108,17 @@ public final class admin extends JFrame {
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        txtNamaWaka = new javax.swing.JTextField();
+        txtNamaKa = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        txtGbCalon = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        txtNoCalon = new javax.swing.JTextField();
+        lbFotoPasangan = new javax.swing.JLabel();
+        jButton7 = new javax.swing.JButton();
+        jPanel4 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -222,7 +236,64 @@ public final class admin extends JFrame {
         jTabbedPane1.addTab("Data Pemilih", jPanel1);
 
         jPanel3.setBackground(new java.awt.Color(44, 62, 80));
-        jTabbedPane1.addTab("Data Calon ", jPanel3);
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("Nama Calon Wakil Ketua");
+        jPanel3.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 20, 180, 20));
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("Nama Calon Ketua");
+        jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, 140, 20));
+
+        txtNamaWaka.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jPanel3.add(txtNamaWaka, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 50, 180, 30));
+
+        txtNamaKa.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jPanel3.add(txtNamaKa, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 50, 180, 30));
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setText("Gambar Calon");
+        jPanel3.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 100, 140, 20));
+
+        txtGbCalon.setEditable(false);
+        txtGbCalon.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        txtGbCalon.setDisabledTextColor(new java.awt.Color(255, 255, 255));
+        jPanel3.add(txtGbCalon, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 130, 180, 30));
+
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setText("Nomor Calon");
+        jPanel3.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, 140, 20));
+
+        txtNoCalon.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jPanel3.add(txtNoCalon, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, 180, 30));
+
+        lbFotoPasangan.setForeground(new java.awt.Color(255, 255, 255));
+        lbFotoPasangan.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbFotoPasangan.setText("FOTO PASANGAN CALON");
+        lbFotoPasangan.setBorder(javax.swing.BorderFactory.createMatteBorder(3, 3, 3, 3, new java.awt.Color(255, 255, 255)));
+        jPanel3.add(lbFotoPasangan, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 180, 135, 155));
+
+        jButton7.setBackground(new java.awt.Color(123, 239, 178));
+        jButton7.setText("Browse");
+        jButton7.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(123, 239, 178), 15));
+        jButton7.setBorderPainted(false);
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+        jPanel3.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(403, 170, 80, 30));
+
+        jTabbedPane1.addTab("Input Data Calon ", jPanel3);
+
+        jPanel4.setBackground(new java.awt.Color(44, 62, 80));
+        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jTabbedPane1.addTab("Pengaturan Data Calon", jPanel4);
 
         getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 40, 580, 460));
 
@@ -302,6 +373,28 @@ public final class admin extends JFrame {
         this.dispose();
     }//GEN-LAST:event_insertButtonActionPerformed
 
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        FileNameExtensionFilter fileext = new FileNameExtensionFilter("File .jpg / .png", "jpg", "png");
+        JFileChooser jfc = new JFileChooser("D:");
+        jfc.addChoosableFileFilter(fileext);
+        int r = jfc.showOpenDialog(jPanel1);
+        if (r == JFileChooser.APPROVE_OPTION) {
+            txtGbCalon.setText(jfc.getSelectedFile().getAbsolutePath());
+            ImageIcon icon = new ImageIcon(jfc.getSelectedFile().getAbsolutePath());
+            Image img1 = icon.getImage();
+            Image img2 = img1.getScaledInstance(lbFotoPasangan.getWidth(), lbFotoPasangan.getHeight(), Image.SCALE_SMOOTH);
+            ImageIcon img = new ImageIcon(img2);
+            lbFotoPasangan.setIcon(img);
+            lbFotoPasangan.setText("");
+            lbFotoPasangan.setBorder(null);
+        } else {
+            txtGbCalon.setText("");
+            lbFotoPasangan.setIcon(null);
+            lbFotoPasangan.setText("FOTO PASANGAN CALON");
+            lbFotoPasangan.setBorder(new MatteBorder(3, 3, 3, 3, Color.white));
+        }
+    }//GEN-LAST:event_jButton7ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -345,12 +438,23 @@ public final class admin extends JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable2;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel lbFotoPasangan;
+    private javax.swing.JTextField txtGbCalon;
+    private javax.swing.JTextField txtNamaKa;
+    private javax.swing.JTextField txtNamaWaka;
+    private javax.swing.JTextField txtNoCalon;
     // End of variables declaration//GEN-END:variables
 }
