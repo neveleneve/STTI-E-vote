@@ -14,8 +14,9 @@ public class dbconnection {
     public Connection connect(){
     //koneksi ke database
     try{
-        String url = "jdbc:mysql://localhost/votingapp";
-        koneksi= DriverManager.getConnection(url,"root","");
+        //ubah ip address sesuai server
+        String url = "jdbc:mysql://192.168.100.87/votingapp";
+        koneksi= DriverManager.getConnection(url,"rootvoting","");
         System.out.println("Berhasil Koneksi Ke Database");
     }catch(SQLException e){
         System.out.println("Tidak Berhasil Koneksi Ke Database");

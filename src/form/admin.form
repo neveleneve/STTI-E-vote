@@ -57,8 +57,8 @@
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName=" Data Pemilih ">
-                <Property name="tabTitle" type="java.lang.String" value=" Data Pemilih "/>
+              <JTabbedPaneConstraints tabName="  Data Pemilih  ">
+                <Property name="tabTitle" type="java.lang.String" value="  Data Pemilih  "/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -306,8 +306,8 @@
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName=" Input Data Calon ">
-                <Property name="tabTitle" type="java.lang.String" value=" Input Data Calon "/>
+              <JTabbedPaneConstraints tabName="  Input Data Calon  ">
+                <Property name="tabTitle" type="java.lang.String" value="  Input Data Calon  "/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -322,7 +322,7 @@
                   <Font name="Tahoma" size="14" style="1"/>
                 </Property>
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                  <Color blue="18" green="ca" red="f7" type="rgb"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Nama Calon Wakil Ketua"/>
               </Properties>
@@ -338,7 +338,7 @@
                   <Font name="Tahoma" size="14" style="1"/>
                 </Property>
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                  <Color blue="18" green="ca" red="f7" type="rgb"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Nama Calon Ketua"/>
               </Properties>
@@ -382,7 +382,7 @@
                   <Font name="Tahoma" size="14" style="1"/>
                 </Property>
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                  <Color blue="18" green="ca" red="f7" type="rgb"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Gambar Calon"/>
               </Properties>
@@ -416,7 +416,7 @@
                   <Font name="Tahoma" size="14" style="1"/>
                 </Property>
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                  <Color blue="18" green="ca" red="f7" type="rgb"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Nomor Calon"/>
               </Properties>
@@ -495,8 +495,8 @@
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName=" Pengaturan Data Calon ">
-                <Property name="tabTitle" type="java.lang.String" value=" Pengaturan Data Calon "/>
+              <JTabbedPaneConstraints tabName="  Pengaturan Data Calon  ">
+                <Property name="tabTitle" type="java.lang.String" value="  Pengaturan Data Calon  "/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>

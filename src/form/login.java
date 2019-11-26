@@ -333,8 +333,9 @@ public class login extends JFrame{
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         try{
-            String url = "jdbc:mysql://localhost/votingapp";
-            Connection koneksi= DriverManager.getConnection(url,"root","");
+            //ubah ip address sesuai server
+            String url = "jdbc:mysql://192.168.100.87/votingapp";
+            Connection koneksi= DriverManager.getConnection(url,"rootvoting","");
             String t = "<html><font color=#f7ca18>Anda Sudah Terhubung</font>";
             UIManager ui = new UIManager();
             ui.put("OptionPane.background", new ColorUIResource(44,62,80));

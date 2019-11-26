@@ -242,18 +242,18 @@ public final class admin extends JFrame {
         });
         jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 490, 165, 30));
 
-        jTabbedPane1.addTab(" Data Pemilih ", jPanel1);
+        jTabbedPane1.addTab("  Data Pemilih  ", jPanel1);
 
         jPanel3.setBackground(new java.awt.Color(44, 62, 80));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setForeground(new java.awt.Color(247, 202, 24));
         jLabel1.setText("Nama Calon Wakil Ketua");
         jPanel3.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 20, 180, 20));
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setForeground(new java.awt.Color(247, 202, 24));
         jLabel2.setText("Nama Calon Ketua");
         jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 20, 140, 20));
 
@@ -264,7 +264,7 @@ public final class admin extends JFrame {
         jPanel3.add(txtNamaKa, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 50, 180, 30));
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setForeground(new java.awt.Color(247, 202, 24));
         jLabel3.setText("Gambar Calon");
         jPanel3.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 100, 140, 20));
 
@@ -274,7 +274,7 @@ public final class admin extends JFrame {
         jPanel3.add(txtGbCalon, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 130, 180, 30));
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setForeground(new java.awt.Color(247, 202, 24));
         jLabel4.setText("Nomor Calon");
         jPanel3.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 100, 140, 20));
 
@@ -298,11 +298,11 @@ public final class admin extends JFrame {
         });
         jPanel3.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 130, 80, 30));
 
-        jTabbedPane1.addTab(" Input Data Calon ", jPanel3);
+        jTabbedPane1.addTab("  Input Data Calon  ", jPanel3);
 
         jPanel4.setBackground(new java.awt.Color(44, 62, 80));
         jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        jTabbedPane1.addTab(" Pengaturan Data Calon ", jPanel4);
+        jTabbedPane1.addTab("  Pengaturan Data Calon  ", jPanel4);
 
         getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 40, 700, 560));
 
