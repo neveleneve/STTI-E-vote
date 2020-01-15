@@ -32,12 +32,13 @@ public final class Persentase extends javax.swing.JFrame {
         progressbar1();
         progressbar2();
     }
+    String ip = getIPServer.IPaddress;
+    public Connection conn = new dbconnection().connect(ip);
     public String namacalon1, namacalon2;
     public static Double totalsuara, jumsuara1, jumsuara2;
     public DecimalFormat df = new DecimalFormat("#0.00");
 
     public void namacalon1() {
-        Connection conn = new dbconnection().connect();
         try {
             PreparedStatement idstate = conn.prepareStatement("select * from hasilvote where id = 1");
             ResultSet idrs = idstate.executeQuery();
@@ -57,9 +58,8 @@ public final class Persentase extends javax.swing.JFrame {
         }
     }
 
-    public static void progressbar1() {
+    public void progressbar1() {
         jProgressBar1.setValue(0);
-        Connection conn = new dbconnection().connect();
         try {
             PreparedStatement idstate = conn.prepareStatement("select jumlahsuara from hasilvote where id = 1");
             ResultSet idrs = idstate.executeQuery();
@@ -83,7 +83,6 @@ public final class Persentase extends javax.swing.JFrame {
     }
 
     public void namacalon2() {
-        Connection conn = new dbconnection().connect();
         try {
             PreparedStatement idstate = conn.prepareStatement("select * from hasilvote where id = 2");
             ResultSet idrs = idstate.executeQuery();
@@ -103,9 +102,8 @@ public final class Persentase extends javax.swing.JFrame {
         }
     }
 
-    public static void progressbar2() {
+    public void progressbar2() {
         jProgressBar2.setValue(0);
-        Connection conn = new dbconnection().connect();
         try {
             PreparedStatement idstate = conn.prepareStatement("select jumlahsuara from hasilvote where id = 2");
             ResultSet idrs = idstate.executeQuery();
@@ -128,9 +126,8 @@ public final class Persentase extends javax.swing.JFrame {
         System.out.println("Persen Paslon 2 : " + persen2);
     }
 
-    public static void jumlahsuara() {
+    public void jumlahsuara() {
         totalsuara = 0.0;
-        Connection conn = new dbconnection().connect();
         try {
             PreparedStatement idstate = conn.prepareStatement("select sum(jumlahsuara) as a from hasilvote");
             ResultSet idrs = idstate.executeQuery();
@@ -207,13 +204,13 @@ public final class Persentase extends javax.swing.JFrame {
         lbFotoPaslon2.setForeground(new java.awt.Color(255, 255, 255));
         lbFotoPaslon2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbFotoPaslon2.setText("FOTO");
-        jPanel1.add(lbFotoPaslon2, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 290, 189, 217));
+        jPanel1.add(lbFotoPaslon2, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 300, 180, 200));
 
         lbFotoPaslon1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         lbFotoPaslon1.setForeground(new java.awt.Color(255, 255, 255));
         lbFotoPaslon1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbFotoPaslon1.setText("FOTO");
-        jPanel1.add(lbFotoPaslon1, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 50, 189, 217));
+        jPanel1.add(lbFotoPaslon1, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 60, 180, 200));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 40, 1366, 730));
 

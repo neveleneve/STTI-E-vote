@@ -21,15 +21,16 @@ import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
-//import javax.swing.border.MatteBorder;
+import form.getIPServer;
 import javax.swing.plaf.ColorUIResource;
 
 public class login extends JFrame{
-        Thread T;
-        boolean kanan = true; 
-        boolean kiri = false ;
-        boolean berjalan = true;
-        int x, y;
+    Thread T;
+    boolean kanan = true;
+    boolean kiri = false ;
+    boolean berjalan = true;
+    int x, y;
+        
     public login() {        
         initComponents();
         jl1pic();
@@ -41,10 +42,12 @@ public class login extends JFrame{
         jTextField1.requestFocus();
         jLabel4.setText(" ");
         jLabel5.setText(" "); 
-        jLabel6.setText(" "); 
+        jLabel6.setText(" ");
+        UIManager.put("OptionPane.background", new ColorUIResource(44, 62, 80));
+        UIManager.put("Panel.background", new ColorUIResource(44, 62, 80));
     }    
-    
-    public Connection conn = new dbconnection().connect();
+    String ip = getIPServer.IPaddress;
+    public Connection conn = new dbconnection().connect(ip);
     int xa =620;
     int ya = 80;
     @Override
@@ -249,11 +252,15 @@ public class login extends JFrame{
     
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         char[] a = {'P','a','s','s','w','o','r','d','.','.','.'};
-        if("NIM...".equals(jTextField1.getText())|| Arrays.equals(a, jPasswordField1.getPassword())){
+        char[] reset = {'r','e','s','t','a','r','t',' ','a','p','p'};
+        char[] close = {'e','x','i','t',' ','a','p','p',};
+        if(Arrays.equals(jPasswordField1.getPassword(), close)){
+            this.dispose();
+        }else if(Arrays.equals(jPasswordField1.getPassword(), reset)){
+            this.dispose();
+            new getIPServer().setVisible(true);
+        }else if("NIM...".equals(jTextField1.getText())|| Arrays.equals(a, jPasswordField1.getPassword())){
             String t = "<html><font color=#f7ca18>Silahkan Lengkapi Data Login Anda</font>";
-            UIManager ui = new UIManager();
-            ui.put("OptionPane.background", new ColorUIResource(44,62,80));
-            ui.put("Panel.background", new ColorUIResource(44,62,80));
             JOptionPane.showMessageDialog(null, t, "Informasi", JOptionPane.INFORMATION_MESSAGE);
         }else{
             try {
@@ -275,9 +282,6 @@ public class login extends JFrame{
                         if(confrs.next()){
                             if ("s".equals(confrs.getString("confirm"))){
                                 String t = "<html><font color=#f7ca18>Anda Sudah Memilih!</font>";
-                                UIManager ui = new UIManager();
-                                ui.put("OptionPane.background", new ColorUIResource(44,62,80));
-                                ui.put("Panel.background", new ColorUIResource(44,62,80));
                                 JOptionPane.showMessageDialog(null, t, "Informasi", JOptionPane.INFORMATION_MESSAGE);
                                 jTextField1.setText("NIM...");
                                 jPasswordField1.setText("Password...");
@@ -288,9 +292,6 @@ public class login extends JFrame{
                                 jLabel4.setText(" ");
                                 jLabel5.setText(" ");
                                 String t = "<html><font color=#f7ca18>Anda Telah Login! Silahkan Memilih!</font>";
-                                UIManager ui = new UIManager();
-                                ui.put("OptionPane.background", new ColorUIResource(44,62,80));
-                                ui.put("Panel.background", new ColorUIResource(44,62,80));
                                 JOptionPane.showMessageDialog(null, t, "Informasi", JOptionPane.INFORMATION_MESSAGE);
                                 this.dispose();
                                 try {
@@ -308,9 +309,6 @@ public class login extends JFrame{
                     }                        
                 }else{
                     String t = "<html><font color=#f7ca18>NIM Anda Tidak Terdaftar. Silahkan Hubungi Panitia!</font>";
-                    UIManager ui = new UIManager();
-                    ui.put("OptionPane.background", new ColorUIResource(44,62,80));
-                    ui.put("Panel.background", new ColorUIResource(44,62,80));
                     JOptionPane.showMessageDialog(null, t, "Informasi", JOptionPane.INFORMATION_MESSAGE);
                 }    
             } catch (SQLException ex) {
@@ -334,21 +332,15 @@ public class login extends JFrame{
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         try{
             //ubah ip address sesuai server
-            String url = "jdbc:mysql://192.168.100.87/votingapp";
-            Connection koneksi= DriverManager.getConnection(url,"rootvoting","");
+            String url = "jdbc:mysql://"+ip+"/votingapp";
+            Connection koneksi= DriverManager.getConnection(url,"root","");
             String t = "<html><font color=#f7ca18>Anda Sudah Terhubung</font>";
-            UIManager ui = new UIManager();
-            ui.put("OptionPane.background", new ColorUIResource(44,62,80));
-            ui.put("Panel.background", new ColorUIResource(44,62,80));
             Thread.sleep(1000);
-            JOptionPane.showMessageDialog(null, t, "Informasi", JOptionPane.INFORMATION_MESSAGE);            
+            JOptionPane.showMessageDialog(null, t, "Informasi", JOptionPane.INFORMATION_MESSAGE);
             jTextField1.requestFocus();
         }catch(InterruptedException | SQLException e){
             try {
                 String t = "<html><font color=#f7ca18>Anda Tidak Terhubung</font>";
-                UIManager ui = new UIManager();
-                ui.put("OptionPane.background", new ColorUIResource(44,62,80));
-                ui.put("Panel.background", new ColorUIResource(44,62,80));
                 Thread.sleep(1000);
                 JOptionPane.showMessageDialog(null, t, "Informasi", JOptionPane.INFORMATION_MESSAGE);
                 System.out.println(e);
@@ -425,9 +417,6 @@ public class login extends JFrame{
         if (evt.getClickCount() == 5) {
             System.out.println("5 times clicked");
             String t = "<html><font color=#f7ca18>Anda Berhasil Melakukan Langkah Administrator. Silahkan Masukkan Password Administrator!</font>";
-            UIManager ui = new UIManager();
-            ui.put("OptionPane.background", new ColorUIResource(44,62,80));
-            ui.put("Panel.background", new ColorUIResource(44,62,80));
             JOptionPane.showMessageDialog(null, t, "Informasi", JOptionPane.INFORMATION_MESSAGE);
             this.dispose();
             // Last Edited 27/03/2019 

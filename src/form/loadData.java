@@ -27,10 +27,15 @@ public class loadData extends javax.swing.JFrame {
      */
     public loadData() {
         initComponents();
+        UIManager.put("OptionPane.background", new ColorUIResource(44, 62, 80));
+        UIManager.put("Panel.background", new ColorUIResource(44, 62, 80));
     }
-    public Connection conn = new dbconnection().connect();
-    public static void loadDataCSV(){
+    String ip = getIPServer.IPaddress;
+    public Connection conn = new dbconnection().connect(ip);
+
+    public static void loadDataCSV() {
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -56,6 +61,7 @@ public class loadData extends javax.swing.JFrame {
         jPanel1.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, 280, 30));
 
         jButton1.setBackground(new java.awt.Color(0, 181, 204));
+        jButton1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jButton1.setText("Browse");
         jButton1.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(0, 0, 0)));
         jButton1.setBorderPainted(false);
@@ -64,9 +70,10 @@ public class loadData extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 60, -1, 30));
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 60, 80, 30));
 
         jButton2.setBackground(new java.awt.Color(123, 239, 178));
+        jButton2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jButton2.setText("Load To Database");
         jButton2.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(0, 0, 0)));
         jButton2.setBorderPainted(false);
@@ -78,6 +85,7 @@ public class loadData extends javax.swing.JFrame {
         jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, 280, 30));
 
         jButton3.setBackground(new java.awt.Color(150, 40, 27));
+        jButton3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jButton3.setForeground(new java.awt.Color(255, 255, 255));
         jButton3.setText("Kembali");
         jButton3.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(0, 0, 0)));
@@ -87,14 +95,14 @@ public class loadData extends javax.swing.JFrame {
                 jButton3ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 110, 70, 30));
+        jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 110, 80, 30));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(247, 202, 24));
         jLabel1.setText("Data Export");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 330, 20));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 400, 200));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 410, 200));
 
         pack();
         setLocationRelativeTo(null);
@@ -106,21 +114,18 @@ public class loadData extends javax.swing.JFrame {
         JFileChooser jfc = new JFileChooser("D:");
         jfc.addChoosableFileFilter(fileext);
         int r = jfc.showOpenDialog(jPanel1);
-        if(r == JFileChooser.APPROVE_OPTION){
+        if (r == JFileChooser.APPROVE_OPTION) {
             jTextField1.setText(jfc.getSelectedFile().getAbsolutePath());
-        }else{
+        } else {
             jTextField1.setText("");
-        }        
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
-    
+
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        if(jTextField1.getText().trim().isEmpty()){
+        if (jTextField1.getText().trim().isEmpty()) {
             String t = "<html><font color=#f7ca18>Silahkan Pilih Data yang Akan Diimport!</font>";
-            UIManager ui = new UIManager();
-            ui.put("OptionPane.background", new ColorUIResource(44,62,80));
-            ui.put("Panel.background", new ColorUIResource(44,62,80));
-            JOptionPane.showMessageDialog(null, t, "Informasi", JOptionPane.INFORMATION_MESSAGE);            
-        }else{
+            JOptionPane.showMessageDialog(null, t, "Informasi", JOptionPane.INFORMATION_MESSAGE);
+        } else {
             String path = jTextField1.getText();
             try {
                 String SQL = "load data infile '" + path + "' into table login columns "
@@ -128,12 +133,9 @@ public class loadData extends javax.swing.JFrame {
                 java.sql.Statement stm = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
                 stm.executeUpdate(SQL);
                 String t = "<html><font color=#f7ca18>Data Sukses Diimport!</font>";
-                UIManager ui = new UIManager();
-                ui.put("OptionPane.background", new ColorUIResource(44,62,80));
-                ui.put("Panel.background", new ColorUIResource(44,62,80));
-                JOptionPane.showMessageDialog(null, t, "Informasi", JOptionPane.INFORMATION_MESSAGE);                
+                JOptionPane.showMessageDialog(null, t, "Informasi", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
-                new admin("admin").setVisible(true);                
+                new admin("admin").setVisible(true);
             } catch (SQLException e) {
                 JOptionPane.showMessageDialog(null, e);
             }

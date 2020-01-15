@@ -1,4 +1,5 @@
 package form;
+
 import conf.dbconnection;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -6,22 +7,20 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import java.util.logging.Logger;
-import java.util.logging.Level;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.plaf.ColorUIResource;
-public class voter extends JFrame{
+
+public class voter extends JFrame {
+
     Thread T;
     boolean kanan = true;
     boolean kiri = false;
@@ -29,10 +28,13 @@ public class voter extends JFrame{
     int x, y;
     Date tgl = new Date();
     public String namapemilih = null;
-    public String nimpemilih = null;    
+    public String nimpemilih = null;
     Dimension d = new Dimension(604, 420);
-    public voter(String paranama, String paranim){        
-        initComponents();        
+
+    public voter(String paranama, String paranim) {
+        initComponents();
+        UIManager.put("OptionPane.background", new ColorUIResource(44, 62, 80));
+        UIManager.put("Panel.background", new ColorUIResource(44, 62, 80));
         jButton1.requestFocus();
         namapemilih = paranama;
         nimpemilih = paranim;
@@ -40,35 +42,37 @@ public class voter extends JFrame{
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setResizable(false);
         namaPaslon1();
-        namaPaslon2();          
+        namaPaslon2();
     }
+    String ip = getIPServer.IPaddress;
+    public Connection conn = new dbconnection().connect(ip);
     int xa = 1000;
     int ya = 30;
+
     @Override
-    public void paint(Graphics g){
+    public void paint(Graphics g) {
         super.paint(g);
-        Graphics2D gd =(Graphics2D)g;
+        Graphics2D gd = (Graphics2D) g;
         gd.setFont(new Font("Tahoma", Font.BOLD, 14));
-        gd.setColor(new Color(0,0,0));
+        gd.setColor(new Color(0, 0, 0));
         gd.drawString("Selamat Datang, " + namapemilih, xa, ya);
         try {
             Thread.sleep(25);
-            xa-=2;
-        } catch (Exception e) {
-        
+            xa -= 2;
+        } catch (InterruptedException e) {
+
         }
-        if(xa<-257){
+        if (xa < -257) {
             xa = 1000;
-            //gd.setColor(Color.red);
         }
         repaint();
     }
-    public void namaPaslon1(){               
-        java.sql.Connection conn = new dbconnection().connect();        
+
+    public void namaPaslon1() {
         try {
             java.sql.PreparedStatement stm = conn.prepareStatement("select nama,gambar from hasilvote where Id = 1");
             ResultSet rs = stm.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 String nama = rs.getString("nama");
                 byte[] img = rs.getBytes("gambar");
                 ImageIcon myimg = new ImageIcon(img);
@@ -79,60 +83,56 @@ public class voter extends JFrame{
                 jRadioButton1.setText(nama);
             }
         } catch (SQLException e) {
-        
-        }        
-    }    
-    public void updatePaslon1Choosed(){
-        java.sql.Connection conn = new dbconnection().connect();        
+            System.out.println(e);
+        }
+    }
+
+    public void updatePaslon1Choosed() {
         try {
             java.sql.PreparedStatement stm = conn.prepareStatement("UPDATE hasilvote SET jumlahsuara = jumlahsuara + 1 WHERE Id = 1");
             stm.executeUpdate();
-            conn.close();
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e);
+            System.out.println(e);
         }
     }
-    public void namaPaslon2(){
-        java.sql.Connection conn = new dbconnection().connect();        
+
+    public void namaPaslon2() {
         try {
             java.sql.PreparedStatement stm = conn.prepareStatement("select nama,gambar from hasilvote where Id = 2");
-                ResultSet rs = stm.executeQuery();
-                if(rs.next()){
-                    String nama = rs.getString("nama");
-                    byte[] img = rs.getBytes("gambar");
-                    ImageIcon myimg = new ImageIcon(img);
-                    Image img1 = myimg.getImage();
-                    Image img2 = img1.getScaledInstance(jLabel2.getWidth(), jLabel2.getHeight(), Image.SCALE_SMOOTH);
-                    ImageIcon i = new ImageIcon(img2);
-                    jLabel3.setIcon(i);
-                    jRadioButton2.setText(nama);
-                }
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                String nama = rs.getString("nama");
+                byte[] img = rs.getBytes("gambar");
+                ImageIcon myimg = new ImageIcon(img);
+                Image img1 = myimg.getImage();
+                Image img2 = img1.getScaledInstance(jLabel2.getWidth(), jLabel2.getHeight(), Image.SCALE_SMOOTH);
+                ImageIcon i = new ImageIcon(img2);
+                jLabel3.setIcon(i);
+                jRadioButton2.setText(nama);
+            }
         } catch (SQLException e) {
-     
+            System.out.println(e);
         }
-    }    
-    public void updatePaslon2Choosed(){
-        java.sql.Connection conn = new dbconnection().connect();        
+    }
+
+    public void updatePaslon2Choosed() {
         try {
             java.sql.PreparedStatement stm = conn.prepareStatement("UPDATE hasilvote SET jumlahsuara = jumlahsuara + 1 WHERE Id = 2");
             stm.executeUpdate();
-            conn.close();
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e);
+            System.out.println(e);
         }
     }
-    
-    public void updateVoterTimeChooser(){
-        java.sql.Connection con = new dbconnection().connect();
+
+    public void updateVoterTimeChooser() {
         try {
-            java.sql.PreparedStatement stm = con.prepareStatement("UPDATE login SET confirm = 's', tanggal ='"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(tgl)+"' WHERE nim = '" + nimpemilih +"'");
+            java.sql.PreparedStatement stm = conn.prepareStatement("UPDATE login SET confirm = 's', tanggal ='" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(tgl) + "' WHERE nim = '" + nimpemilih + "'");
             stm.executeUpdate();
-            con.close();
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e);
+            System.out.println(e);
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -163,7 +163,7 @@ public class voter extends JFrame{
                 jLabel2MouseClicked(evt);
             }
         });
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 110, 270, 310));
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 110, 270, 300));
         jLabel2.getAccessibleContext().setAccessibleName("jLabel2");
 
         jLabel3.setBorder(new javax.swing.border.MatteBorder(null));
@@ -173,7 +173,7 @@ public class voter extends JFrame{
                 jLabel3MouseClicked(evt);
             }
         });
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 110, 270, 310));
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 110, 270, 300));
         jLabel3.getAccessibleContext().setAccessibleName("jLabel3");
 
         jRadioButton2.setBackground(new java.awt.Color(0, 0, 255));
@@ -241,56 +241,49 @@ public class voter extends JFrame{
             System.out.println("double clicked");
             jRadioButton1.setSelected(true);
             jButton1.doClick();
-        }else if(evt.getClickCount() == 1){
+        } else if (evt.getClickCount() == 1) {
             System.out.println("single clicked");
             jRadioButton1.setSelected(true);
         }
     }//GEN-LAST:event_jLabel2MouseClicked
     private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
-        jRadioButton2.setSelected(true);   
+        jRadioButton2.setSelected(true);
         if (evt.getClickCount() == 2) {
             System.out.println("double clicked");
             jRadioButton2.setSelected(true);
             jButton1.doClick();
-        }else if(evt.getClickCount() == 1){
+        } else if (evt.getClickCount() == 1) {
             System.out.println("single clicked");
             jRadioButton2.setSelected(true);
         }
     }//GEN-LAST:event_jLabel3MouseClicked
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if (!jRadioButton1.isSelected() && !jRadioButton2.isSelected()){
+        if (!jRadioButton1.isSelected() && !jRadioButton2.isSelected()) {
             String t = "<html><font color=#f7ca18>Silahkan Pilih Kandidat Terlebih Dahulu</font>";
-            UIManager ui = new UIManager();
-            ui.put("OptionPane.background", new ColorUIResource(44,62,80));
-            ui.put("Panel.background", new ColorUIResource(44,62,80));
             JOptionPane.showMessageDialog(null, t, "Informasi", JOptionPane.INFORMATION_MESSAGE);
-            //JOptionPane.showMessageDialog(null, "Silahkan Pilih Terlebih Dahulu", "Info", JOptionPane.INFORMATION_MESSAGE);
-        }else{
+        } else {
             String nourut = "";
-            if(jRadioButton1.isSelected()){
+            if (jRadioButton1.isSelected()) {
                 nourut = "1";
-            }else if(jRadioButton2.isSelected()){
+            } else if (jRadioButton2.isSelected()) {
                 nourut = "2";
             }
             String t = "<html><font color=#f7ca18>Apakah Anda Yakin Memilih Pasangan Nomor Urut " + nourut + " ?</font>";
-            UIManager ui = new UIManager();
-            ui.put("OptionPane.background", new ColorUIResource(44,62,80));
-            ui.put("Panel.background", new ColorUIResource(44,62,80));
-            
             String[] options = {"YA", "TIDAK"};
-            int xyz = JOptionPane.showOptionDialog(null, 
-                    t, "Yakin Memilih?", JOptionPane.DEFAULT_OPTION, 
+            int xyz = JOptionPane.showOptionDialog(null,
+                    t, "Yakin Memilih?", JOptionPane.DEFAULT_OPTION,
                     JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-            switch (xyz){
+            switch (xyz) {
                 case 0:
-                    if (jRadioButton1.isSelected()){
+                    if (jRadioButton1.isSelected()) {
                         updatePaslon1Choosed();
                         updateVoterTimeChooser();
-                    }else if (jRadioButton2.isSelected()){
+                    } else if (jRadioButton2.isSelected()) {
                         updatePaslon2Choosed();
                         updateVoterTimeChooser();
                     }
-                    JOptionPane.showMessageDialog(null, "Terima Kasih. Anda Berhasil Memilih!", "Info", JOptionPane.INFORMATION_MESSAGE);
+                    String xx = "<html><font color=#f7ca18>Terima Kasih. Anda Berhasil Memilih!\"</font>";
+                    JOptionPane.showMessageDialog(null, xx, "Info", JOptionPane.INFORMATION_MESSAGE);
                     new login().setVisible(true);
                     this.dispose();
                     break;

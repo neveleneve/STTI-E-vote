@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package form;
 
 import java.awt.event.KeyEvent;
@@ -16,59 +11,39 @@ import javax.swing.UIManager;
 import javax.swing.plaf.ColorUIResource;
 import java.sql.Connection;
 
-/**
- *
- * @author NEVE
- */
 public class adminlogin extends javax.swing.JFrame {
-    
-    /**
-     * Creates new form adminlogin
-     */
+
     public adminlogin() {
         initComponents();
         setExtendedState(JFrame.MAXIMIZED_HORIZ);
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setResizable(false);
+        UIManager.put("OptionPane.background", new ColorUIResource(44, 62, 80));
+        UIManager.put("Panel.background", new ColorUIResource(44, 62, 80));
     }
-    
+
+    String ip = getIPServer.IPaddress;
+    public Connection conn = new dbconnection().connect(ip);
     int attempt = 0;
-    public Connection conn = new dbconnection().connect();
     String SQL;
-    /*public void deleteAllData(){
-        java.sql.Connection conn = new dbconnection().connect();
-        try{
-            SQL = "delete from gaji_karyawan";
-            java.sql.PreparedStatement stmt = conn.prepareStatement(SQL);
-            stmt.executeUpdate();              
-        }catch(SQLException ex){
-                  JOptionPane.showMessageDialog(null,"Data Gagal Di Hapus");
-        }
-        
-    }*/
-    public void AdminLogin(){
-        try {            
+
+    public void AdminLogin() {
+        try {
             java.sql.PreparedStatement adminstate = conn.prepareStatement("select * from login where nim = 'admin' and password = ?");
             adminstate.setString(1, String.valueOf(jPasswordField1.getPassword()));
             ResultSet adminrs = adminstate.executeQuery();
-            if(adminrs.next()){
+            if (adminrs.next()) {
                 String nama = adminrs.getString("nama");
                 this.dispose();
                 new admin(nama).setVisible(true);
                 //new persentase().setVisible(true);
-            }else if(!adminrs.next() && attempt < 2){
+            } else if (!adminrs.next() && attempt < 2) {
                 String t = "<html><font color=#f7ca18>Password Salah!</font>";
-                UIManager ui = new UIManager();
-                ui.put("OptionPane.background", new ColorUIResource(44,62,80));
-                ui.put("Panel.background", new ColorUIResource(44,62,80));
                 JOptionPane.showMessageDialog(null, t, "Informasi", JOptionPane.INFORMATION_MESSAGE);
                 attempt = attempt + 1;
                 jPasswordField1.setText("");
-            }else if(!adminrs.next() && attempt == 2){
+            } else if (!adminrs.next() && attempt == 2) {
                 String t = "<html><font color=#f7ca18>Sudah 3 Kali Memasukkan Password! Kembali Ke Halaman Login</font>";
-                UIManager ui = new UIManager();
-                ui.put("OptionPane.background", new ColorUIResource(44,62,80));
-                ui.put("Panel.background", new ColorUIResource(44,62,80));
                 JOptionPane.showMessageDialog(null, t, "Informasi", JOptionPane.INFORMATION_MESSAGE);
                 attempt = 0;
                 new login().setVisible(true);
@@ -78,8 +53,8 @@ public class adminlogin extends javax.swing.JFrame {
             System.out.println(e);
         }
     }
-    
-    public void deleteAllDataLogin(){
+
+    public void deleteAllDataLogin() {
         try {
             java.sql.PreparedStatement stm = conn.prepareStatement("delete from login where nama not in('admin')");
             stm.executeUpdate();
@@ -88,27 +63,21 @@ public class adminlogin extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, e);
         }
     }
-    
-    public void DeleteDataConfirm(){
-        try {            
+
+    public void DeleteDataConfirm() {
+        try {
             java.sql.PreparedStatement adminstate = conn.prepareStatement("select * from login where nim = 'admin' and password = ?");
             adminstate.setString(1, String.valueOf(jPasswordField1.getPassword()));
             ResultSet adminrs = adminstate.executeQuery();
-            if(adminrs.next() && attempt < 2){
+            if (adminrs.next() && attempt < 2) {
                 String a = "<html><font color=#f7ca18></font>";
-                UIManager aui = new UIManager();
-                aui.put("OptionPane.background", new ColorUIResource(44,62,80));
-                aui.put("Panel.background", new ColorUIResource(44,62,80));
                 String[] options = {"YA", "TIDAK"};
-                int xyz = JOptionPane.showOptionDialog(null, 
-                    a, "Yakin Akan Menghapus Data Login?", JOptionPane.DEFAULT_OPTION, 
-                    JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-                switch (xyz){
+                int xyz = JOptionPane.showOptionDialog(null,
+                        a, "Yakin Akan Menghapus Data Login?", JOptionPane.DEFAULT_OPTION,
+                        JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+                switch (xyz) {
                     case 0:
                         String t = "<html><font color=#f7ca18>Data Berhasil Dihapus!</font>";
-                        UIManager ui = new UIManager();
-                        ui.put("OptionPane.background", new ColorUIResource(44,62,80));
-                        ui.put("Panel.background", new ColorUIResource(44,62,80));
                         JOptionPane.showMessageDialog(null, t, "Informasi", JOptionPane.INFORMATION_MESSAGE);
                         deleteAllDataLogin();
                         this.dispose();
@@ -118,20 +87,14 @@ public class adminlogin extends javax.swing.JFrame {
                         break;
                     default:
                         break;
-                }                
-            }else if(!adminrs.next() && attempt < 2){
+                }
+            } else if (!adminrs.next() && attempt < 2) {
                 String t = "<html><font color=#f7ca18>Password Salah!</font>";
-                UIManager ui = new UIManager();
-                ui.put("OptionPane.background", new ColorUIResource(44,62,80));
-                ui.put("Panel.background", new ColorUIResource(44,62,80));
                 JOptionPane.showMessageDialog(null, t, "Informasi", JOptionPane.INFORMATION_MESSAGE);
                 attempt = attempt + 1;
                 jPasswordField1.setText("");
-            }else if(!adminrs.next() && attempt == 2){
+            } else if (!adminrs.next() && attempt == 2) {
                 String t = "<html><font color=#f7ca18>Sudah 3 Kali Memasukkan Password! Kembali Ke Halaman Admin</font>";
-                UIManager ui = new UIManager();
-                ui.put("OptionPane.background", new ColorUIResource(44,62,80));
-                ui.put("Panel.background", new ColorUIResource(44,62,80));
                 JOptionPane.showMessageDialog(null, t, "Informasi", JOptionPane.INFORMATION_MESSAGE);
                 attempt = 0;
                 new admin("admin").setVisible(true);
@@ -141,11 +104,7 @@ public class adminlogin extends javax.swing.JFrame {
             System.out.println(e);
         }
     }
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -206,38 +165,35 @@ public class adminlogin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jPasswordField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField1KeyPressed
-        if (evt.getKeyCode() == KeyEvent.VK_ESCAPE){
+        if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
             this.dispose();
             //new login().setVisible(true);
             //setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);            
         }
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER){
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             jButton1.doClick();
             //setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         }
     }//GEN-LAST:event_jPasswordField1KeyPressed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if(jButton1.getText().equals("Login")){
+        if (jButton1.getText().equals("Login")) {
             AdminLogin();
-        }else if(jButton1.getText().equals("Konfirmasi")){
+        } else if (jButton1.getText().equals("Konfirmasi")) {
             DeleteDataConfirm();
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        if(jButton1.getText().equals("Konfirmasi")){
-           new admin("admin").setVisible(true);
-           this.dispose();
-       }else if(jButton1.getText().equals("Login")){
-           new login().setVisible(true);
-           this.dispose();
-       }
+        if (jButton1.getText().equals("Konfirmasi")) {
+            new admin("admin").setVisible(true);
+            this.dispose();
+        } else if (jButton1.getText().equals("Login")) {
+            new login().setVisible(true);
+            this.dispose();
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
