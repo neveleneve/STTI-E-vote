@@ -43,7 +43,7 @@ public final class admin extends JFrame {
 
     public admin(String para) {
         initComponents();
-        TampilData();
+        TampilDataPemilih();
         setExtendedState(JFrame.MAXIMIZED_HORIZ);
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setResizable(false);
@@ -55,17 +55,17 @@ public final class admin extends JFrame {
     String ip = getIPServer.IPaddress;
     public Connection conn = new dbconnection().connect(ip);
 
-    public void TampilData() {
+    public void TampilDataPemilih() {
         tbllogin_mdl = new DefaultTableModel();
         tbllogin_mdl.addColumn("NIM");
         tbllogin_mdl.addColumn("Nama");
         tbllogin_mdl.addColumn("Password");
         tbllogin_mdl.addColumn("Status");
-        jTable2.setModel(tbllogin_mdl);
-        jTable2.getColumnModel().getColumn(0).setPreferredWidth(70);
-        jTable2.getColumnModel().getColumn(1).setPreferredWidth(120);
-        jTable2.getColumnModel().getColumn(2).setPreferredWidth(80);
-        jTable2.getColumnModel().getColumn(3).setPreferredWidth(20);
+        tbPemilih.setModel(tbllogin_mdl);
+        tbPemilih.getColumnModel().getColumn(0).setPreferredWidth(70);
+        tbPemilih.getColumnModel().getColumn(1).setPreferredWidth(120);
+        tbPemilih.getColumnModel().getColumn(2).setPreferredWidth(80);
+        tbPemilih.getColumnModel().getColumn(3).setPreferredWidth(20);
         try {
             Statement stmt = conn.createStatement();
             ResultSet res = stmt.executeQuery("select * from login where nama <> 'admin'");
@@ -114,11 +114,10 @@ public final class admin extends JFrame {
         try {
             Statement stmt = conn.createStatement();
             ResultSet res = stmt.executeQuery("select max(right(password, 3)) as xxx from login where nim <> 'admin'");
-            String pass;
+            int pass;
             while (res.next()) {
-                pass = res.getString("xxx");
-                int i = Integer.parseInt(pass);
-                String no = String.valueOf(i + 1);
+                pass = res.getInt("xxx");
+                String no = String.valueOf(pass + 1);
                 int noLong = no.length();
                 for (int a = 0; a < 3 - noLong; a++) {
                     no = "0" + no;
@@ -137,6 +136,7 @@ public final class admin extends JFrame {
                 System.out.println("Error Add Data Pemilih");
                 System.out.println(e);
             }
+            TampilDataPemilih();
         } catch (SQLException e) {
             System.out.println("Error Selecting max ID");
             System.out.println(e);
@@ -170,10 +170,27 @@ public final class admin extends JFrame {
         jButton6 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        tbPemilih = new javax.swing.JTable();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        jPanel5 = new javax.swing.JPanel();
+        txtNIMTambah = new javax.swing.JTextField();
+        lbPass = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        txtNamaTambah = new javax.swing.JTextField();
+        jButton9 = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tbPaslon = new javax.swing.JTable();
+        lbFotoPasangan1 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        txtNoUrut = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        txtNamaPaslon = new javax.swing.JTextField();
+        jButton10 = new javax.swing.JButton();
+        jButton12 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -186,13 +203,8 @@ public final class admin extends JFrame {
         lbFotoPasangan = new javax.swing.JLabel();
         jButton7 = new javax.swing.JButton();
         jButton8 = new javax.swing.JButton();
-        jPanel5 = new javax.swing.JPanel();
-        txtNIMTambah = new javax.swing.JTextField();
-        lbPass = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        txtNamaTambah = new javax.swing.JTextField();
-        jButton9 = new javax.swing.JButton();
-        jLabel8 = new javax.swing.JLabel();
+        jButton11 = new javax.swing.JButton();
+        jPanel6 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
 
@@ -251,8 +263,8 @@ public final class admin extends JFrame {
         });
         jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 10, 80, 30));
 
-        jTable2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        tbPemilih.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        tbPemilih.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -263,7 +275,7 @@ public final class admin extends JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane2.setViewportView(jTable2);
+        jScrollPane2.setViewportView(tbPemilih);
 
         jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, 675, 420));
 
@@ -305,6 +317,111 @@ public final class admin extends JFrame {
         jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 490, 165, 30));
 
         jTabbedPane1.addTab("  Data Pemilih  ", jPanel1);
+
+        jPanel5.setBackground(new java.awt.Color(44, 62, 80));
+        jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        txtNIMTambah.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jPanel5.add(txtNIMTambah, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 50, 180, 30));
+
+        lbPass.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lbPass.setForeground(new java.awt.Color(255, 255, 255));
+        lbPass.setText("NIM");
+        jPanel5.add(lbPass, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 140, 60, 30));
+
+        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel7.setText("Nama");
+        jPanel5.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 50, 60, 30));
+
+        txtNamaTambah.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jPanel5.add(txtNamaTambah, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 50, 230, 30));
+
+        jButton9.setBackground(new java.awt.Color(123, 239, 178));
+        jButton9.setText("Input");
+        jButton9.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(123, 239, 178)));
+        jButton9.setBorderPainted(false);
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
+        jPanel5.add(jButton9, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 190, 270, 30));
+
+        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setText("NIM");
+        jPanel5.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 50, 60, 30));
+
+        jTabbedPane1.addTab("Tambah Data Pemilih", jPanel5);
+
+        jPanel4.setBackground(new java.awt.Color(44, 62, 80));
+        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        tbPaslon.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        tbPaslon.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane3.setViewportView(tbPaslon);
+
+        jPanel4.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 230, 675, 240));
+
+        lbFotoPasangan1.setForeground(new java.awt.Color(255, 255, 255));
+        lbFotoPasangan1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbFotoPasangan1.setText("FOTO PASANGAN CALON");
+        lbFotoPasangan1.setBorder(javax.swing.BorderFactory.createMatteBorder(3, 3, 3, 3, new java.awt.Color(255, 255, 255)));
+        jPanel4.add(lbFotoPasangan1, new org.netbeans.lib.awtextra.AbsoluteConstraints(475, 30, 150, 160));
+
+        jLabel9.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel9.setText("No. Urut Pasangan Calon");
+        jPanel4.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 150, 30));
+
+        txtNoUrut.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jPanel4.add(txtNoUrut, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 30, 210, 30));
+
+        jLabel10.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel10.setText("Nama Pasangan Calon");
+        jPanel4.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, 150, 30));
+
+        txtNamaPaslon.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jPanel4.add(txtNamaPaslon, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 90, 210, 30));
+
+        jButton10.setBackground(new java.awt.Color(123, 239, 178));
+        jButton10.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jButton10.setText("Perbarui Data Paslon");
+        jButton10.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(0, 0, 0)));
+        jButton10.setBorderPainted(false);
+        jButton10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton10ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(jButton10, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 160, 150, 30));
+
+        jButton12.setBackground(new java.awt.Color(150, 40, 27));
+        jButton12.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jButton12.setForeground(new java.awt.Color(255, 255, 255));
+        jButton12.setText("Hapus Data Paslon");
+        jButton12.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(0, 0, 0)));
+        jButton12.setBorderPainted(false);
+        jButton12.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton12ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(jButton12, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 160, 150, 30));
+
+        jTabbedPane1.addTab("Data Pasangan Calon", jPanel4);
 
         jPanel3.setBackground(new java.awt.Color(44, 62, 80));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -369,46 +486,25 @@ public final class admin extends JFrame {
                 jButton8ActionPerformed(evt);
             }
         });
-        jPanel3.add(jButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 190, 270, 30));
+        jPanel3.add(jButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 180, 270, 30));
+
+        jButton11.setBackground(new java.awt.Color(150, 40, 27));
+        jButton11.setForeground(new java.awt.Color(255, 255, 255));
+        jButton11.setText("Hapus Data Calon");
+        jButton11.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(123, 239, 178)));
+        jButton11.setBorderPainted(false);
+        jButton11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton11ActionPerformed(evt);
+            }
+        });
+        jPanel3.add(jButton11, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 220, 270, 30));
 
         jTabbedPane1.addTab("  Input Data Calon  ", jPanel3);
 
-        jPanel5.setBackground(new java.awt.Color(44, 62, 80));
-        jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        txtNIMTambah.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        jPanel5.add(txtNIMTambah, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 50, 180, 30));
-
-        lbPass.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        lbPass.setForeground(new java.awt.Color(255, 255, 255));
-        lbPass.setText("NIM");
-        jPanel5.add(lbPass, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 140, 60, 30));
-
-        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel7.setText("Nama");
-        jPanel5.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 50, 60, 30));
-
-        txtNamaTambah.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        jPanel5.add(txtNamaTambah, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 50, 230, 30));
-
-        jButton9.setBackground(new java.awt.Color(123, 239, 178));
-        jButton9.setText("Input");
-        jButton9.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(123, 239, 178)));
-        jButton9.setBorderPainted(false);
-        jButton9.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton9ActionPerformed(evt);
-            }
-        });
-        jPanel5.add(jButton9, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 190, 270, 30));
-
-        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel8.setText("NIM");
-        jPanel5.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 50, 60, 30));
-
-        jTabbedPane1.addTab("Tambah Data Pemilih", jPanel5);
+        jPanel6.setBackground(new java.awt.Color(44, 62, 80));
+        jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jTabbedPane1.addTab("Report", jPanel6);
 
         getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 40, 700, 560));
 
@@ -432,11 +528,11 @@ public final class admin extends JFrame {
         tbllogin_mdl.addColumn("Nama");
         tbllogin_mdl.addColumn("Password");
         tbllogin_mdl.addColumn("Status");
-        jTable2.setModel(tbllogin_mdl);
-        jTable2.getColumnModel().getColumn(0).setPreferredWidth(70);
-        jTable2.getColumnModel().getColumn(1).setPreferredWidth(120);
-        jTable2.getColumnModel().getColumn(2).setPreferredWidth(80);
-        jTable2.getColumnModel().getColumn(3).setPreferredWidth(20);
+        tbPemilih.setModel(tbllogin_mdl);
+        tbPemilih.getColumnModel().getColumn(0).setPreferredWidth(70);
+        tbPemilih.getColumnModel().getColumn(1).setPreferredWidth(120);
+        tbPemilih.getColumnModel().getColumn(2).setPreferredWidth(80);
+        tbPemilih.getColumnModel().getColumn(3).setPreferredWidth(20);
         try {
             Statement stmt = conn.createStatement();
             ResultSet res = stmt.executeQuery("select * from login where nim like  '" + jTextField1.getText() + "%'");
@@ -474,7 +570,7 @@ public final class admin extends JFrame {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
-        TampilData();
+        TampilDataPemilih();
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
@@ -540,6 +636,18 @@ public final class admin extends JFrame {
         }        
     }//GEN-LAST:event_jButton9ActionPerformed
 
+    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton11ActionPerformed
+
+    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton10ActionPerformed
+
+    private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton12ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -578,6 +686,9 @@ public final class admin extends JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton insertButton;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton10;
+    private javax.swing.JButton jButton11;
+    private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton5;
@@ -586,27 +697,36 @@ public final class admin extends JFrame {
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel lbFotoPasangan;
+    private javax.swing.JLabel lbFotoPasangan1;
     private javax.swing.JLabel lbPass;
+    private javax.swing.JTable tbPaslon;
+    private javax.swing.JTable tbPemilih;
     private javax.swing.JTextField txtGbCalon;
     private javax.swing.JTextField txtNIMTambah;
     private javax.swing.JTextField txtNamaKa;
+    private javax.swing.JTextField txtNamaPaslon;
     private javax.swing.JTextField txtNamaTambah;
     private javax.swing.JTextField txtNamaWaka;
     private javax.swing.JTextField txtNoCalon;
+    private javax.swing.JTextField txtNoUrut;
     // End of variables declaration//GEN-END:variables
 }

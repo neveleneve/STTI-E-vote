@@ -254,15 +254,18 @@ public class login extends JFrame{
         char[] a = {'P','a','s','s','w','o','r','d','.','.','.'};
         char[] reset = {'r','e','s','t','a','r','t',' ','a','p','p'};
         char[] close = {'e','x','i','t',' ','a','p','p',};
-        if(Arrays.equals(jPasswordField1.getPassword(), close)){
+        if("NIM...".equals(jTextField1.getText()) && Arrays.equals(jPasswordField1.getPassword(), close)){
             this.dispose();
-        }else if(Arrays.equals(jPasswordField1.getPassword(), reset)){
+        }else if("NIM...".equals(jTextField1.getText()) && Arrays.equals(jPasswordField1.getPassword(), reset)){
             this.dispose();
             new getIPServer().setVisible(true);
-        }else if("NIM...".equals(jTextField1.getText())|| Arrays.equals(a, jPasswordField1.getPassword())){
+        }else if("NIM...".equals(jTextField1.getText())){
             String t = "<html><font color=#f7ca18>Silahkan Lengkapi Data Login Anda</font>";
             JOptionPane.showMessageDialog(null, t, "Informasi", JOptionPane.INFORMATION_MESSAGE);
-        }else{
+        }else if(Arrays.equals(a, jPasswordField1.getPassword())){
+            String t = "<html><font color=#f7ca18>Silahkan Lengkapi Data Login Anda</font>";
+            JOptionPane.showMessageDialog(null, t, "Informasi", JOptionPane.INFORMATION_MESSAGE);
+        }else {
             try {
                 PreparedStatement nimstate = conn.prepareStatement("select * from login where nim = ?");
                 nimstate.setString(1, jTextField1.getText());
@@ -272,7 +275,7 @@ public class login extends JFrame{
                     String nim = nimrs.getString("nim");
                     PreparedStatement passtate = conn.prepareStatement("select * from login where nim = ? and password = ?");
                     passtate.setString(1, jTextField1.getText());
-                    passtate.setString(2, String.valueOf(jPasswordField1.getPassword()));
+                    passtate.setString(2, jPasswordField1.getText());
                     ResultSet pasrs = passtate.executeQuery();
                     if(pasrs.next()){
                         PreparedStatement conftate = conn.prepareStatement("select * from login where nim = ? and password = ?");

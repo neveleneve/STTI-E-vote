@@ -70,15 +70,15 @@ public final class Persentase extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, e);
         }
         double persen1 = (jumsuara1 / totalsuara) * 100;
-        jProgressBar1.setValue(jumsuara1.intValue());
-        jProgressBar1.setMaximum(totalsuara.intValue());
+
         String persenan1 = Double.toString(persen1);
         if ("NaN".equals(persenan1)) {
             persen1 = 0.0;
         } else {
-
+            jProgressBar1.setValue(jumsuara1.intValue());
+            jProgressBar1.setMaximum(totalsuara.intValue());
+            jProgressBar1.setString(String.format("%,.2f", persen1) + " %");
         }
-        jProgressBar1.setString(String.format("%,.2f", persen1) + " %");
         System.out.println("Persen Paslon 1 : " + persen1);
     }
 
@@ -179,7 +179,7 @@ public final class Persentase extends javax.swing.JFrame {
         jLabel2.setFocusable(false);
         jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 320, 370, 130));
 
-        jProgressBar2.setBackground(new java.awt.Color(255, 255, 0));
+        jProgressBar2.setBackground(new java.awt.Color(255, 255, 255));
         jProgressBar2.setForeground(new java.awt.Color(255, 255, 0));
         jProgressBar2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jProgressBar2.setFocusable(false);
@@ -193,7 +193,7 @@ public final class Persentase extends javax.swing.JFrame {
         jLabel1.setFocusable(false);
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 80, 360, 130));
 
-        jProgressBar1.setBackground(new java.awt.Color(255, 0, 0));
+        jProgressBar1.setBackground(new java.awt.Color(255, 255, 255));
         jProgressBar1.setForeground(new java.awt.Color(255, 0, 0));
         jProgressBar1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jProgressBar1.setFocusable(false);

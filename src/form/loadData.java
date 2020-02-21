@@ -122,6 +122,7 @@ public class loadData extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        String X = "b";
         if (jTextField1.getText().trim().isEmpty()) {
             String t = "<html><font color=#f7ca18>Silahkan Pilih Data yang Akan Diimport!</font>";
             JOptionPane.showMessageDialog(null, t, "Informasi", JOptionPane.INFORMATION_MESSAGE);
@@ -129,7 +130,7 @@ public class loadData extends javax.swing.JFrame {
             String path = jTextField1.getText();
             try {
                 String SQL = "load data infile '" + path + "' into table login columns "
-                        + "terminated by ';' (nim, nama, password, confirm, tanggal);";
+                        + "terminated by ';' (nim, password, nama);";
                 java.sql.Statement stm = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
                 stm.executeUpdate(SQL);
                 String t = "<html><font color=#f7ca18>Data Sukses Diimport!</font>";

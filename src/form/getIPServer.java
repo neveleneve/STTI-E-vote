@@ -5,7 +5,6 @@
  */
 package form;
 
-import com.placeholder.PlaceHolder;
 import java.awt.Color;
 
 
@@ -19,8 +18,7 @@ public class getIPServer extends javax.swing.JFrame {
      * Creates new form getIPServer
      */
     public getIPServer() {
-        initComponents();
-        PlaceHolder input = new PlaceHolder(jTextField1, new Color(125,118,58), new Color(247,202,24), "Input IP Address...", false, "Tahoma", 11);
+        initComponents();        
     }
     public static transient String IPaddress;
     /**
