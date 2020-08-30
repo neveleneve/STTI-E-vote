@@ -29,6 +29,15 @@ import javax.swing.WindowConstants;
 import javax.swing.border.MatteBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.plaf.ColorUIResource;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.design.JRDesignQuery;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -44,6 +53,7 @@ public final class admin extends JFrame {
     public admin(String para) {
         initComponents();
         TampilDataPemilih();
+        TampilDataPaslon();
         setExtendedState(JFrame.MAXIMIZED_HORIZ);
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setResizable(false);
@@ -54,6 +64,25 @@ public final class admin extends JFrame {
     }
     String ip = getIPServer.IPaddress;
     public Connection conn = new dbconnection().connect(ip);
+
+    public void ambilGamber(String id) {
+//        lbFotoPasanganx.setIcon(null);
+        try {
+            java.sql.PreparedStatement stm = conn.prepareStatement("select gambar from hasilvote where Id = '" + id + "'");
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                byte[] img = rs.getBytes("gambar");
+                ImageIcon myimg = new ImageIcon(img);
+                Image img1 = myimg.getImage();
+                Image img2 = img1.getScaledInstance(lbFotoPasanganx.getWidth(), lbFotoPasanganx.getHeight(), Image.SCALE_SMOOTH);
+                ImageIcon i = new ImageIcon(img2);
+                lbFotoPasanganx.setBorder(null);
+                lbFotoPasanganx.setIcon(i);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
 
     public void TampilDataPemilih() {
         tbllogin_mdl = new DefaultTableModel();
@@ -68,7 +97,7 @@ public final class admin extends JFrame {
         tbPemilih.getColumnModel().getColumn(3).setPreferredWidth(20);
         try {
             Statement stmt = conn.createStatement();
-            ResultSet res = stmt.executeQuery("select * from login where nama <> 'admin'");
+            ResultSet res = stmt.executeQuery("select * from login where nim <> 'admin'");
             while (res.next()) {
                 tbllogin_mdl.addRow(new Object[]{
                     res.getString("nim"),
@@ -82,21 +111,45 @@ public final class admin extends JFrame {
         }
     }
 
-    public void AddDataCalon() throws FileNotFoundException{
+    public void TampilDataPaslon() {
+        tbllogin_mdl = new DefaultTableModel();
+        tbllogin_mdl.addColumn("Nama Urut Pasangan Calon");
+        tbllogin_mdl.addColumn("Nama Pasangan Calon");
+        tbllogin_mdl.addColumn("Jumlah Suara");
+        tbPaslon.setModel(tbllogin_mdl);
+        tbPaslon.getColumnModel().getColumn(0).setPreferredWidth(50);
+        tbPaslon.getColumnModel().getColumn(1).setPreferredWidth(190);
+        tbPaslon.getColumnModel().getColumn(2).setPreferredWidth(50);
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet res = stmt.executeQuery("select * from hasilvote");
+            while (res.next()) {
+                tbllogin_mdl.addRow(new Object[]{
+                    res.getString("id"),
+                    res.getString("nama"),
+                    res.getString("jumlahsuara")
+                });
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+
+    public void AddDataCalon() throws FileNotFoundException {
         try {
             File image = new File(txtGbCalon.getText());
             Statement stmt = conn.createStatement();
-            ResultSet res = stmt.executeQuery("select max(id) as xxx from hasilvote");            
+            ResultSet res = stmt.executeQuery("select max(id) as xxx from hasilvote");
             int id = 0;
             while (res.next()) {
-                id = res.getInt("xxx");                
+                id = res.getInt("xxx");
             }
             System.out.println(String.valueOf(id));
             FileInputStream inputstream = new FileInputStream(image);
             PreparedStatement stm = conn.prepareStatement("insert into hasilvote values (?,?,?, ?)");
             try {
                 stm.setString(1, txtNoCalon.getText());
-                stm.setString(2, txtNamaKa.getText()+" - "+txtNamaWaka.getText());
+                stm.setString(2, txtNamaKa.getText() + " - " + txtNamaWaka.getText());
                 stm.setInt(3, 0);
                 stm.setBinaryStream(4, (InputStream) inputstream, (int) image.length());
                 stm.executeUpdate();
@@ -109,8 +162,8 @@ public final class admin extends JFrame {
             System.out.println(e);
         }
     }
-    
-    public void AddDataPemilih(){
+
+    public void AddDataPemilih() {
         try {
             Statement stmt = conn.createStatement();
             ResultSet res = stmt.executeQuery("select max(right(password, 3)) as xxx from login where nim <> 'admin'");
@@ -129,7 +182,7 @@ public final class admin extends JFrame {
             try {
                 stm.setString(1, txtNIMTambah.getText());
                 stm.setString(2, txtNamaTambah.getText());
-                stm.setString(3, "A"+lbPass.getText());
+                stm.setString(3, "A" + lbPass.getText());
                 stm.setString(4, "b");
                 stm.executeUpdate();
             } catch (SQLException e) {
@@ -141,14 +194,78 @@ public final class admin extends JFrame {
             System.out.println("Error Selecting max ID");
             System.out.println(e);
         }
-        
     }
-    
+
     public void DeleteAllData() {
         try {
             PreparedStatement stm = conn.prepareStatement("truncate login");
             stm.executeUpdate();
-            conn.close();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+
+    public void cetakHasilAkhir() {
+        try {
+            File file = new File("src/report/laporansuara.jrxml");
+            JasperDesign jasperdesign = JRXmlLoader.load(file);
+            String sql = "SELECT *, (select sum(jumlahsuara) from hasilvote) as total FROM hasilvote";
+            JRDesignQuery newquery = new JRDesignQuery();
+            newquery.setText(sql);
+            jasperdesign.setQuery(newquery);
+            JasperReport jasperreport = JasperCompileManager.compileReport(jasperdesign);
+            JasperPrint jasperprint = JasperFillManager.fillReport(jasperreport, null, conn);
+            JasperViewer.viewReport(jasperprint, false);
+        } catch (JRException e) {
+            System.out.println(e);
+        }
+    }
+
+    public void cetakPemilihTidakMemilih() {
+        try {
+            File file = new File("src/report/LaporanPemilih.jrxml");
+            JasperDesign jasperdesign = JRXmlLoader.load(file);
+            String sql = "select * from login where nim <> 'admin' and confirm = 'b'";
+            JRDesignQuery newquery = new JRDesignQuery();
+            newquery.setText(sql);
+            jasperdesign.setQuery(newquery);
+            JasperReport jasperreport = JasperCompileManager.compileReport(jasperdesign);
+            JasperPrint jasperprint = JasperFillManager.fillReport(jasperreport, null, conn);
+            JasperViewer.viewReport(jasperprint, false);
+        } catch (JRException e) {
+            System.out.println(e);
+        }
+    }
+
+    public void cetakPemilihMemilih() {
+        try {
+            File file = new File("src/report/LaporanPemilih.jrxml");
+            JasperDesign jasperdesign = JRXmlLoader.load(file);
+            String sql = "select * from login where nim <> 'admin' and confirm = 's'";
+            JRDesignQuery newquery = new JRDesignQuery();
+            newquery.setText(sql);
+            jasperdesign.setQuery(newquery);
+            JasperReport jasperreport = JasperCompileManager.compileReport(jasperdesign);
+            JasperPrint jasperprint = JasperFillManager.fillReport(jasperreport, null, conn);
+            JasperViewer.viewReport(jasperprint, false);
+        } catch (JRException e) {
+            System.out.println(e);
+        }
+    }
+
+    public void UpdateData(String nama, String id) {
+        try {
+            PreparedStatement stm = conn.prepareStatement("update hasilvote set nama= '" + nama + "' where id = '" + id + "'");
+            stm.executeUpdate();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+
+    public void DeleteDataPaslon(String id) {
+        try {
+            PreparedStatement stm = conn.prepareStatement("delete from hasilvote where id = '" + id + "'");
+            stm.executeUpdate();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e);
         }
@@ -171,9 +288,9 @@ public final class admin extends JFrame {
         jButton1 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tbPemilih = new javax.swing.JTable();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        btnPersentase = new javax.swing.JButton();
+        btnLogOut = new javax.swing.JButton();
+        btnRefresh = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         txtNIMTambah = new javax.swing.JTextField();
         lbPass = new javax.swing.JLabel();
@@ -184,13 +301,14 @@ public final class admin extends JFrame {
         jPanel4 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tbPaslon = new javax.swing.JTable();
-        lbFotoPasangan1 = new javax.swing.JLabel();
+        lbFotoPasanganx = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         txtNoUrut = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         txtNamaPaslon = new javax.swing.JTextField();
-        jButton10 = new javax.swing.JButton();
-        jButton12 = new javax.swing.JButton();
+        btnUpdatePaslon = new javax.swing.JButton();
+        btnHapusPaslon = new javax.swing.JButton();
+        btnHapusPaslon1 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -201,10 +319,11 @@ public final class admin extends JFrame {
         jLabel4 = new javax.swing.JLabel();
         txtNoCalon = new javax.swing.JTextField();
         lbFotoPasangan = new javax.swing.JLabel();
-        jButton7 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
-        jButton11 = new javax.swing.JButton();
+        btnBrowse = new javax.swing.JButton();
+        btnInputPaslon = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
+        cbLaporan = new javax.swing.JComboBox<>();
+        btnInputPaslon1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
 
@@ -279,42 +398,42 @@ public final class admin extends JFrame {
 
         jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, 675, 420));
 
-        jButton2.setBackground(new java.awt.Color(0, 181, 204));
-        jButton2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jButton2.setText("Lihat Persentase");
-        jButton2.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(0, 0, 0)));
-        jButton2.setBorderPainted(false);
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnPersentase.setBackground(new java.awt.Color(0, 181, 204));
+        btnPersentase.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btnPersentase.setText("Lihat Persentase");
+        btnPersentase.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(0, 0, 0)));
+        btnPersentase.setBorderPainted(false);
+        btnPersentase.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnPersentaseActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 490, 165, 30));
+        jPanel1.add(btnPersentase, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 490, 165, 30));
 
-        jButton3.setBackground(new java.awt.Color(150, 40, 27));
-        jButton3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jButton3.setForeground(new java.awt.Color(255, 255, 255));
-        jButton3.setText("Log Out");
-        jButton3.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(0, 0, 0)));
-        jButton3.setBorderPainted(false);
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        btnLogOut.setBackground(new java.awt.Color(150, 40, 27));
+        btnLogOut.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btnLogOut.setForeground(new java.awt.Color(255, 255, 255));
+        btnLogOut.setText("Log Out");
+        btnLogOut.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(0, 0, 0)));
+        btnLogOut.setBorderPainted(false);
+        btnLogOut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                btnLogOutActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 490, 165, 30));
+        jPanel1.add(btnLogOut, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 490, 165, 30));
 
-        jButton5.setBackground(new java.awt.Color(123, 239, 178));
-        jButton5.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jButton5.setText("Refresh Tabel");
-        jButton5.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(0, 0, 0)));
-        jButton5.setBorderPainted(false);
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        btnRefresh.setBackground(new java.awt.Color(123, 239, 178));
+        btnRefresh.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btnRefresh.setText("Refresh Tabel");
+        btnRefresh.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(0, 0, 0)));
+        btnRefresh.setBorderPainted(false);
+        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                btnRefreshActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 490, 165, 30));
+        jPanel1.add(btnRefresh, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 490, 165, 30));
 
         jTabbedPane1.addTab("  Data Pemilih  ", jPanel1);
 
@@ -326,7 +445,6 @@ public final class admin extends JFrame {
 
         lbPass.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         lbPass.setForeground(new java.awt.Color(255, 255, 255));
-        lbPass.setText("NIM");
         jPanel5.add(lbPass, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 140, 60, 30));
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
@@ -335,9 +453,10 @@ public final class admin extends JFrame {
         jPanel5.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 50, 60, 30));
 
         txtNamaTambah.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        jPanel5.add(txtNamaTambah, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 50, 230, 30));
+        jPanel5.add(txtNamaTambah, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 50, 220, 30));
 
         jButton9.setBackground(new java.awt.Color(123, 239, 178));
+        jButton9.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jButton9.setText("Input");
         jButton9.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(123, 239, 178)));
         jButton9.setBorderPainted(false);
@@ -346,7 +465,7 @@ public final class admin extends JFrame {
                 jButton9ActionPerformed(evt);
             }
         });
-        jPanel5.add(jButton9, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 190, 270, 30));
+        jPanel5.add(jButton9, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 100, 220, 30));
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
@@ -370,15 +489,20 @@ public final class admin extends JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tbPaslon.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbPaslonMouseClicked(evt);
+            }
+        });
         jScrollPane3.setViewportView(tbPaslon);
 
         jPanel4.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 230, 675, 240));
 
-        lbFotoPasangan1.setForeground(new java.awt.Color(255, 255, 255));
-        lbFotoPasangan1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbFotoPasangan1.setText("FOTO PASANGAN CALON");
-        lbFotoPasangan1.setBorder(javax.swing.BorderFactory.createMatteBorder(3, 3, 3, 3, new java.awt.Color(255, 255, 255)));
-        jPanel4.add(lbFotoPasangan1, new org.netbeans.lib.awtextra.AbsoluteConstraints(475, 30, 150, 160));
+        lbFotoPasanganx.setForeground(new java.awt.Color(255, 255, 255));
+        lbFotoPasanganx.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbFotoPasanganx.setText("FOTO PASANGAN CALON");
+        lbFotoPasanganx.setBorder(javax.swing.BorderFactory.createMatteBorder(3, 3, 3, 3, new java.awt.Color(255, 255, 255)));
+        jPanel4.add(lbFotoPasanganx, new org.netbeans.lib.awtextra.AbsoluteConstraints(475, 30, 160, 160));
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
@@ -386,7 +510,8 @@ public final class admin extends JFrame {
         jPanel4.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 150, 30));
 
         txtNoUrut.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        jPanel4.add(txtNoUrut, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 30, 210, 30));
+        txtNoUrut.setEnabled(false);
+        jPanel4.add(txtNoUrut, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 30, 240, 30));
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(255, 255, 255));
@@ -394,44 +519,56 @@ public final class admin extends JFrame {
         jPanel4.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, 150, 30));
 
         txtNamaPaslon.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        jPanel4.add(txtNamaPaslon, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 90, 210, 30));
+        jPanel4.add(txtNamaPaslon, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 90, 240, 30));
 
-        jButton10.setBackground(new java.awt.Color(123, 239, 178));
-        jButton10.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jButton10.setText("Perbarui Data Paslon");
-        jButton10.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(0, 0, 0)));
-        jButton10.setBorderPainted(false);
-        jButton10.addActionListener(new java.awt.event.ActionListener() {
+        btnUpdatePaslon.setBackground(new java.awt.Color(123, 239, 178));
+        btnUpdatePaslon.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btnUpdatePaslon.setText("Perbarui Data Paslon");
+        btnUpdatePaslon.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(0, 0, 0)));
+        btnUpdatePaslon.setBorderPainted(false);
+        btnUpdatePaslon.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton10ActionPerformed(evt);
+                btnUpdatePaslonActionPerformed(evt);
             }
         });
-        jPanel4.add(jButton10, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 160, 150, 30));
+        jPanel4.add(btnUpdatePaslon, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 160, 150, 30));
 
-        jButton12.setBackground(new java.awt.Color(150, 40, 27));
-        jButton12.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jButton12.setForeground(new java.awt.Color(255, 255, 255));
-        jButton12.setText("Hapus Data Paslon");
-        jButton12.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(0, 0, 0)));
-        jButton12.setBorderPainted(false);
-        jButton12.addActionListener(new java.awt.event.ActionListener() {
+        btnHapusPaslon.setBackground(new java.awt.Color(150, 40, 27));
+        btnHapusPaslon.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btnHapusPaslon.setForeground(new java.awt.Color(255, 255, 255));
+        btnHapusPaslon.setText("Hapus Data Paslon");
+        btnHapusPaslon.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(0, 0, 0)));
+        btnHapusPaslon.setBorderPainted(false);
+        btnHapusPaslon.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton12ActionPerformed(evt);
+                btnHapusPaslonActionPerformed(evt);
             }
         });
-        jPanel4.add(jButton12, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 160, 150, 30));
+        jPanel4.add(btnHapusPaslon, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 160, 150, 30));
+
+        btnHapusPaslon1.setBackground(new java.awt.Color(0, 181, 204));
+        btnHapusPaslon1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btnHapusPaslon1.setText("Refresh");
+        btnHapusPaslon1.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(0, 0, 0)));
+        btnHapusPaslon1.setBorderPainted(false);
+        btnHapusPaslon1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHapusPaslon1ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(btnHapusPaslon1, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 160, 90, 30));
 
         jTabbedPane1.addTab("Data Pasangan Calon", jPanel4);
 
         jPanel3.setBackground(new java.awt.Color(44, 62, 80));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(247, 202, 24));
         jLabel1.setText("Nama Calon Wakil Ketua");
         jPanel3.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 20, 180, 20));
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(247, 202, 24));
         jLabel2.setText("Nama Calon Ketua");
         jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 20, 140, 20));
@@ -442,7 +579,7 @@ public final class admin extends JFrame {
         txtNamaKa.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jPanel3.add(txtNamaKa, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 50, 180, 30));
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(247, 202, 24));
         jLabel3.setText("Gambar Calon");
         jPanel3.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 100, 140, 20));
@@ -452,7 +589,7 @@ public final class admin extends JFrame {
         txtGbCalon.setDisabledTextColor(new java.awt.Color(255, 255, 255));
         jPanel3.add(txtGbCalon, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 130, 180, 30));
 
-        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(247, 202, 24));
         jLabel4.setText("Nomor Calon");
         jPanel3.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 100, 140, 20));
@@ -466,44 +603,50 @@ public final class admin extends JFrame {
         lbFotoPasangan.setBorder(javax.swing.BorderFactory.createMatteBorder(3, 3, 3, 3, new java.awt.Color(255, 255, 255)));
         jPanel3.add(lbFotoPasangan, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 180, 270, 288));
 
-        jButton7.setBackground(new java.awt.Color(123, 239, 178));
-        jButton7.setText("Browse");
-        jButton7.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(123, 239, 178)));
-        jButton7.setBorderPainted(false);
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
+        btnBrowse.setBackground(new java.awt.Color(0, 181, 204));
+        btnBrowse.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btnBrowse.setText("Browse");
+        btnBrowse.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(123, 239, 178)));
+        btnBrowse.setBorderPainted(false);
+        btnBrowse.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
+                btnBrowseActionPerformed(evt);
             }
         });
-        jPanel3.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 130, 80, 30));
+        jPanel3.add(btnBrowse, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 130, 80, 30));
 
-        jButton8.setBackground(new java.awt.Color(123, 239, 178));
-        jButton8.setText("Input");
-        jButton8.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(123, 239, 178)));
-        jButton8.setBorderPainted(false);
-        jButton8.addActionListener(new java.awt.event.ActionListener() {
+        btnInputPaslon.setBackground(new java.awt.Color(123, 239, 178));
+        btnInputPaslon.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btnInputPaslon.setText("Input");
+        btnInputPaslon.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(123, 239, 178)));
+        btnInputPaslon.setBorderPainted(false);
+        btnInputPaslon.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton8ActionPerformed(evt);
+                btnInputPaslonActionPerformed(evt);
             }
         });
-        jPanel3.add(jButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 180, 270, 30));
-
-        jButton11.setBackground(new java.awt.Color(150, 40, 27));
-        jButton11.setForeground(new java.awt.Color(255, 255, 255));
-        jButton11.setText("Hapus Data Calon");
-        jButton11.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(123, 239, 178)));
-        jButton11.setBorderPainted(false);
-        jButton11.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton11ActionPerformed(evt);
-            }
-        });
-        jPanel3.add(jButton11, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 220, 270, 30));
+        jPanel3.add(btnInputPaslon, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 180, 270, 30));
 
         jTabbedPane1.addTab("  Input Data Calon  ", jPanel3);
 
         jPanel6.setBackground(new java.awt.Color(44, 62, 80));
         jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        cbLaporan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "PILIH LAPORAN...", "Laporan Hasil Suara Akhir", "Laporan Mahasiswa Pemilih Memilih", "Laporan Mahasiswa Pemilih Tidak Memilih" }));
+        jPanel6.add(cbLaporan, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, 440, 30));
+
+        btnInputPaslon1.setBackground(new java.awt.Color(123, 239, 178));
+        btnInputPaslon1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btnInputPaslon1.setText("Cetak");
+        btnInputPaslon1.setBorder(javax.swing.BorderFactory.createMatteBorder(15, 15, 15, 15, new java.awt.Color(123, 239, 178)));
+        btnInputPaslon1.setBorderPainted(false);
+        btnInputPaslon1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnInputPaslon1ActionPerformed(evt);
+            }
+        });
+        jPanel6.add(btnInputPaslon1, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 30, 220, 30));
+
         jTabbedPane1.addTab("Report", jPanel6);
 
         getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 40, 700, 560));
@@ -549,14 +692,11 @@ public final class admin extends JFrame {
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-//        this.dispose();
+    private void btnPersentaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPersentaseActionPerformed
         new Persentase().setVisible(true);
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_btnPersentaseActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+    private void btnLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogOutActionPerformed
         if (new Persentase().isEnabled()) {
             new Persentase().dispose();
             new login().setVisible(true);
@@ -566,12 +706,11 @@ public final class admin extends JFrame {
             new login().dispose();
             this.dispose();
         }
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_btnLogOutActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
         TampilDataPemilih();
-    }//GEN-LAST:event_jButton5ActionPerformed
+    }//GEN-LAST:event_btnRefreshActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         this.dispose();
@@ -584,7 +723,7 @@ public final class admin extends JFrame {
         this.dispose();
     }//GEN-LAST:event_insertButtonActionPerformed
 
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+    private void btnBrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBrowseActionPerformed
         FileNameExtensionFilter fileext = new FileNameExtensionFilter("File .jpg / .png", "jpg", "png");
         JFileChooser jfc = new JFileChooser("D:");
         jfc.addChoosableFileFilter(fileext);
@@ -604,9 +743,9 @@ public final class admin extends JFrame {
             lbFotoPasangan.setText("FOTO PASANGAN CALON");
             lbFotoPasangan.setBorder(new MatteBorder(3, 3, 3, 3, Color.white));
         }
-    }//GEN-LAST:event_jButton7ActionPerformed
+    }//GEN-LAST:event_btnBrowseActionPerformed
 
-    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+    private void btnInputPaslonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInputPaslonActionPerformed
         if ("".equals(txtNamaKa.getText()) || "".equals(txtNamaWaka.getText()) || "".equals(txtNoCalon.getText()) || "".equals(txtGbCalon.getText())) {
             JOptionPane.showMessageDialog(this, "Data Calon Tidak Lengkap! Mohon Periksa Kembali", "Kesalahan", JOptionPane.ERROR_MESSAGE);
         } else {
@@ -616,14 +755,16 @@ public final class admin extends JFrame {
                 Logger.getLogger(admin.class.getName()).log(Level.SEVERE, null, ex);
             }
             JOptionPane.showMessageDialog(this, "Data Calon Berhasil Diinput", "Berhasil", JOptionPane.INFORMATION_MESSAGE);
+            TampilDataPaslon();
             txtNamaKa.setText("");
             txtNamaWaka.setText("");
             txtNoCalon.setText("");
             txtGbCalon.setText("");
             lbFotoPasangan.setIcon(null);
             lbFotoPasangan.setText("FOTO PASANGAN CALON");
-        }        
-    }//GEN-LAST:event_jButton8ActionPerformed
+            lbFotoPasangan.setBorder(new MatteBorder(3, 3, 3, 3, Color.white));
+        }
+    }//GEN-LAST:event_btnInputPaslonActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
         if ("".equals(txtNIMTambah.getText()) || "".equals(txtNamaTambah.getText())) {
@@ -633,20 +774,61 @@ public final class admin extends JFrame {
             JOptionPane.showMessageDialog(this, "Data Pemilih Berhasil Diinput", "Berhasil", JOptionPane.INFORMATION_MESSAGE);
             txtNIMTambah.setText("");
             txtNamaTambah.setText("");
-        }        
+        }
     }//GEN-LAST:event_jButton9ActionPerformed
 
-    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton11ActionPerformed
+    private void btnUpdatePaslonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdatePaslonActionPerformed
+        UpdateData(txtNamaPaslon.getText(), txtNoUrut.getText());
+        TampilDataPaslon();
+        txtNoUrut.setText("");
+        txtNamaPaslon.setText("");
+        lbFotoPasanganx.setIcon(null);
+        lbFotoPasanganx.setText("FOTO PASANGAN CALON");
+        lbFotoPasanganx.setBorder(new MatteBorder(3, 3, 3, 3, Color.white));
+    }//GEN-LAST:event_btnUpdatePaslonActionPerformed
 
-    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton10ActionPerformed
+    private void btnHapusPaslonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusPaslonActionPerformed
+        DeleteDataPaslon(txtNoUrut.getText());
+        TampilDataPaslon();
+        txtNoUrut.setText("");
+        txtNamaPaslon.setText("");
+        lbFotoPasanganx.setIcon(null);
+        lbFotoPasanganx.setText("FOTO PASANGAN CALON");
+        lbFotoPasanganx.setBorder(new MatteBorder(3, 3, 3, 3, Color.white));
+    }//GEN-LAST:event_btnHapusPaslonActionPerformed
 
-    private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton12ActionPerformed
+    private void tbPaslonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbPaslonMouseClicked
+        int selrow = tbPaslon.getSelectedRow();
+        txtNoUrut.setText(tbPaslon.getValueAt(selrow, 0).toString());
+        txtNamaPaslon.setText(tbPaslon.getValueAt(selrow, 1).toString());
+        ambilGamber(txtNoUrut.getText());
+    }//GEN-LAST:event_tbPaslonMouseClicked
+
+    private void btnHapusPaslon1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusPaslon1ActionPerformed
+        txtNoUrut.setText("");
+        txtNamaPaslon.setText("");
+        lbFotoPasanganx.setIcon(null);
+        lbFotoPasanganx.setText("FOTO PASANGAN CALON");
+        lbFotoPasanganx.setBorder(new MatteBorder(3, 3, 3, 3, Color.white));
+    }//GEN-LAST:event_btnHapusPaslon1ActionPerformed
+
+    private void btnInputPaslon1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInputPaslon1ActionPerformed
+        switch (cbLaporan.getSelectedIndex()) {
+            case 0:
+                break;
+            case 1:
+                cetakHasilAkhir();
+                break;
+            case 2:
+                cetakPemilihMemilih();
+                break;
+            case 3:
+                cetakPemilihTidakMemilih();
+                break;
+            default:
+                break;
+        }
+    }//GEN-LAST:event_btnInputPaslon1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -684,17 +866,19 @@ public final class admin extends JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBrowse;
+    private javax.swing.JButton btnHapusPaslon;
+    private javax.swing.JButton btnHapusPaslon1;
+    private javax.swing.JButton btnInputPaslon;
+    private javax.swing.JButton btnInputPaslon1;
+    private javax.swing.JButton btnLogOut;
+    private javax.swing.JButton btnPersentase;
+    private javax.swing.JButton btnRefresh;
+    private javax.swing.JButton btnUpdatePaslon;
+    private javax.swing.JComboBox<String> cbLaporan;
     private javax.swing.JButton insertButton;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton10;
-    private javax.swing.JButton jButton11;
-    private javax.swing.JButton jButton12;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -716,7 +900,7 @@ public final class admin extends JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel lbFotoPasangan;
-    private javax.swing.JLabel lbFotoPasangan1;
+    private javax.swing.JLabel lbFotoPasanganx;
     private javax.swing.JLabel lbPass;
     private javax.swing.JTable tbPaslon;
     private javax.swing.JTable tbPemilih;

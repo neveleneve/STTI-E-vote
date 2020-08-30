@@ -81,6 +81,8 @@ public class voter extends JFrame {
                 ImageIcon i = new ImageIcon(img2);
                 jLabel2.setIcon(i);
                 jRadioButton1.setText(nama);
+            }else{
+                
             }
         } catch (SQLException e) {
             System.out.println(e);
@@ -109,6 +111,8 @@ public class voter extends JFrame {
                 ImageIcon i = new ImageIcon(img2);
                 jLabel3.setIcon(i);
                 jRadioButton2.setText(nama);
+            }else{
+                
             }
         } catch (SQLException e) {
             System.out.println(e);

@@ -252,8 +252,8 @@ public class login extends JFrame{
     
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         char[] a = {'P','a','s','s','w','o','r','d','.','.','.'};
-        char[] reset = {'r','e','s','t','a','r','t',' ','a','p','p'};
-        char[] close = {'e','x','i','t',' ','a','p','p',};
+        char[] reset = {'r','e','s','t','a','r','t'};
+        char[] close = {'e','x','i','t'};
         if("NIM...".equals(jTextField1.getText()) && Arrays.equals(jPasswordField1.getPassword(), close)){
             this.dispose();
         }else if("NIM...".equals(jTextField1.getText()) && Arrays.equals(jPasswordField1.getPassword(), reset)){
